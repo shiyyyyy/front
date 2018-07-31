@@ -1,0 +1,118 @@
+<div class="wrapper-md">
+    <div class="panel panel-default">
+        <div class="panel-heading font-bold">                                    
+            {{::'DESCRIPTION' | i18n}}
+        </div>
+        <div class="panel-body">
+            <form class="form-inline row">
+                <div class="form-group col-sm-3">
+                    <label>{{::pre_scope().cfg.list.name.text}}</label>
+                    <input type="text" class="form-control" ng-model="data.auth.name">
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-group col-sm-8">
+                    <label>{{::pre_scope().cfg.list.scope.text}}</label>
+                    <input type="text" class="form-control scope" ng-model="data.auth.scope">
+                </div>
+            </form>
+            <br/>
+            <div class="form-group">
+                <label>特殊按钮</label>
+                <label class="checkbox-inline i-checks">
+                    <input type="checkbox"
+                        ng-checked="data.auth.actions.indexOf('快速通过')>-1"
+                        ng-click="toggleCheckbox('快速通过',data.auth.actions)"><i></i> 快速通过
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default" ng-repeat="(cat,mods) in ::data.menu">
+        <div class="panel-heading font-bold" ng-init="show=false;icon='fa-plus'">
+            <a ng-click="show=!show;icon=show?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon"></i> {{::cat}}</a>
+        </div>
+        <div class="panel-body" ng-show="show">
+            <div ng-repeat="(mod,mod_cfg) in ::mods">
+                <div class="form-group">
+                    <label class="checkbox-inline i-checks">
+                        <input type="checkbox" value="{{::mod}}" 
+                            ng-checked="data.auth.actions.indexOf(mod)>-1"
+                            ng-click="toggle_mod_box(mod,data.auth.actions,mod_cfg.action)"><i></i> {{::mod_cfg.text}}
+                    </label>
+                    <label class="checkbox-inline i-checks" ng-repeat="(action,cfg) in ::mod_cfg.action">
+                        <input type="checkbox" value="{{::action}}"
+                            ng-checked="data.auth.actions.indexOf(action)>-1"
+                            ng-click="toggle_action_box(action,data.auth.actions,mod)"><i></i> {{::cfg.text}}
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <button class="btn btn-default btn-sm" 
+                        ng-click="edit_pem_filter({mod:mod,field:field,type:cfg.auth_type||cfg.type})"
+                        ng-repeat="(field,cfg) in ::mod_cfg.s_regular" 
+                        ng-if="{Company:1,Department:1,Employee:1,Doc:1,AccType:1}[cfg.type]
+                                ||(cfg.auth_type&&{Company:1,Department:1,Employee:1,Doc:1,AccType:1}[cfg.auth_type])">
+                        <i class="fa fa-lg" ng-class="data.auth.filters[mod][field]?(data.auth.filters[mod][field][0]==-1?['icon-user-following','text-danger']:['icon-lock','text-success']):'icon-check'"></i>&nbsp;{{::cfg.text}}
+                    </button>
+                </div>
+
+                <div class="line line-dashed b-b line-lg pull-in"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="pem_edit.html">
+<div class="modal-body wrapper-lg p-rel">
+    <button type="button" class="close closeBtn" aria-label="Close" ng-click="cancel()">
+        <!-- <span aria-hidden="true">&times;</span> -->
+    </button>
+    <h3 class="m-t-none m-b font-thin">{{::text}}</h3>
+
+    <div class="form-group">
+        <label class="i-checks">
+            <input type="radio" name="pem" value="unlmt" ng-model="pem">
+            <i></i>
+            <b class="icon-check"></b>&nbsp;{{'UN_LMT' | i18n}}
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label class="i-checks" ng-show="spec_ok">
+            <input type="radio" name="pem" value="spec" ng-model="pem">
+            <i></i>
+            <b class="icon-lock"></b>&nbsp;{{'SPEC_LMT' | i18n}}
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <label class="i-checks">
+            <input type="radio" name="pem" value="self" ng-model="pem">
+            <i></i>
+            <b class="icon-user-following"></b>&nbsp;{{'SELF_LMT' | i18n}}
+        </label>
+
+    </div>
+    <div class="form-group" ng-show="pem=='spec'">
+        <div ng-if="enum_cfg.type==='Department'||enum_cfg.type==='ManagerDeparment'"
+            ng-init="g=group_by_cascade('DepartmentCompany')">
+            <div class="row" ng-repeat="(p_id,items) in g">
+                <div class="col-md-2">{{get_enum('Company')[p_id]}}</div>
+                <div class="col-md-10">
+                    <label class="checkbox-inline i-checks" ng-repeat="item in items">
+                        <input type="checkbox" name="selected[]" value="{{item.id}}" 
+                            ng-checked="spec.indexOf(item.id)>-1"    ng-click="toggleCheckbox(item.id,spec)"><i></i> {{item.name}}
+                    </label>
+                </div>
+            </div>
+        </div>   
+        <label class="checkbox-inline i-checks" ng-repeat="(id,name) in get_enum(enum_cfg,enum_row)" 
+                ng-if="enum_cfg.type!=='Department'&&enum_cfg.type!=='ManagerDepartment'">
+            <input type="checkbox" name="selected[]" value="{{id}}" 
+                        ng-checked="spec.indexOf(id)>-1"    ng-click="toggleCheckbox(id,spec)"><i></i> {{name}}
+        </label>
+    </div>
+    <div class="clearfix m-t-lg">
+        <button class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+    </div>
+
+</div>
+</script>

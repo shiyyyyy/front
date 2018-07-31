@@ -1,0 +1,161 @@
+<!--   <button class="btn btn-default no-shadow pos-abt" ui-toggle-class="active" target=".settings">
+    <i class="fa fa-spin fa-gear"></i> -->
+<button class="btn btn-default no-shadow pos-abt" ng-click="app.theme=0">
+    <i class="fa fa-close"></i>
+</button>
+<div class="panel-heading">
+    {{::'SET_THEME' | i18n}}
+</div>
+<!--   <div class="panel-body"> 
+    <div class="m-b-sm">
+      <label class="i-switch bg-info pull-right">
+        <input type="checkbox" ng-model="app.settings.headerFixed">
+        <i></i>
+      </label>
+      Fixed header 
+    </div>
+    <div class="m-b-sm">
+      <label class="i-switch bg-info pull-right">
+        <input type="checkbox" ng-model="app.settings.asideFixed">
+        <i></i>
+      </label>
+      Fixed aside 
+    </div>
+    <div class="m-b-sm">
+      <label class="i-switch bg-info pull-right">
+        <input type="checkbox" ng-model="app.settings.asideFolded">
+        <i></i>
+      </label>
+      Folded aside 
+    </div>
+    <div class="m-b-sm">
+      <label class="i-switch bg-info pull-right">
+        <input type="checkbox" ng-model="app.settings.asideDock">
+        <i></i>
+      </label>
+      Dock aside
+    </div>
+    <div>
+      <label class="i-switch bg-info pull-right">
+        <input type="checkbox" ng-model="app.settings.container">
+        <i></i>
+      </label>
+      Boxed layout
+    </div>
+  </div> -->
+<div class="wrapper b-t b-light bg-light lter r-b">
+    <div class="row row-sm">
+        <div class="col-xs-6">
+            <!-- black rightTop white -->
+            <label class="i-checks block m-b" ng-repeat="theme_id in [0,2,3,4,5,6,7,16]" ng-click="set_theme(theme_id)">
+                <input type="radio" name="theme_radio" ng-model="app.theme_id" value="{{theme_id}}">
+                <span class="block bg-light clearfix pos-rlt">
+            <span class="active pos-abt w-full h-full bg-black-opacity text-center">
+              <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
+            </span>
+                <b class="{{app.themes[theme_id].miniHeadL}} header"></b>
+                <b class="{{app.themes[theme_id].miniHeadR}} header"></b>
+                <b class="{{app.themes[theme_id].miniBodyL}}"></b>
+                </span>
+            </label>
+        </div>
+        <!--         <label class="i-checks block m-b" ng-click="
+          app.settings.navbarHeaderColor='bg-dbColor2 bg-dbColor';
+          app.settings.navbarCollapseColor='bg-dbColor2-collapse bg-dbColor-collapse';
+          app.settings.asideColor='bg-dbColor-aside';
+          app.settings.navbarTabColor='bg-dbColor2-tab';
+          app.settings.bgChange='bg-dbColor2-change';
+          app.settings.asideBackground='none';
+          app.settings.headerBackground='none';
+          app.settings.contentBackground='#fff';
+          ">
+          <input type="radio" ng-model="app.settings.themeID" value="7">
+          <span class="block bg-light clearfix pos-rlt">
+            <span class="active pos-abt w-full h-full bg-black-opacity text-center">
+              <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
+            </span>
+            <b class="bg-dbColor2 header"></b>
+            <b class="bg-dbColor2 header"></b>
+            <b class="bg-dbColor-aside"></b>
+          </span>
+        </label>
+
+        <label class="i-checks block m-b" ng-click="
+          app.settings.navbarHeaderColor='bg-dbColor3 bg-dbColor';
+          app.settings.navbarCollapseColor='bg-dbColor3-collapse bg-dbColor-collapse';
+          app.settings.asideColor='bg-dbColor-aside';
+          app.settings.navbarTabColor='bg-dbColor3-tab';
+          app.settings.bgChange='bg-dbColor3-change';
+          app.settings.asideBackground='none';
+          app.settings.headerBackground='none';
+          app.settings.contentBackground='#fff';
+         ">
+          <input type="radio" ng-model="app.settings.themeID" value="8">
+          <span class="block bg-light clearfix pos-rlt">
+            <span class="active pos-abt w-full h-full bg-black-opacity text-center">
+              <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
+            </span>
+            <b class="bg-dbColor3 header"></b>
+            <b class="bg-dbColor3 header"></b>
+            <b class="bg-dbColor-aside"></b>
+          </span>
+        </label> -->
+        <div class="col-xs-6">
+            <label class="i-checks block m-b" ng-repeat="theme_id in [8,9,10,11,12,13,14,15]" ng-click="set_theme(theme_id)">
+                <input type="radio" name="theme_radio" ng-model="app.theme_id" value="{{theme_id}}">
+                <span class="block bg-light clearfix pos-rlt">
+            <span class="active pos-abt w-full h-full bg-black-opacity text-center">
+              <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
+            </span>
+                <b class="{{app.themes[theme_id].miniHeadL}} header"></b>
+                <b class="{{app.themes[theme_id].miniHeadR}} header"></b>
+                <b class="{{app.themes[theme_id].miniBodyL}}"></b>
+                </span>
+            </label>
+        </div>
+            <!-- summer sunshine -->
+            <!--         <label class="i-checks block m-b" ng-click="
+          app.settings.navbarHeaderColor='bg-sunshine';
+          app.settings.navbarCollapseColor='bg-sunshine-collapse';
+          app.settings.asideColor='bg-sunshine';
+          app.settings.navbarTabColor='bg-sunshine-tab';
+          app.settings.bgChange='bg-sunshine-change';
+          app.settings.asideBackground='url(img/sunshine-aside.png) no-repeat 0 0';
+          app.settings.headerBackground='url(img/sunshine-header.png) no-repeat 0 0';
+          app.settings.contentBackground='#f2feff';
+         ">
+          <input type="radio" ng-model="app.settings.themeID" value="9">
+          <span class="block bg-light clearfix pos-rlt">
+            <span class="active pos-abt w-full h-full bg-black-opacity text-center">
+              <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
+            </span>
+            <b class="skin-sunshine header"></b>
+            <b class="skin-sunshine header"></b>
+            <b class="skin-sunshine"></b>
+          </span>
+        </label> -->
+            <!-- spring green -->
+            <!--         <label class="i-checks block m-b" ng-click="
+          app.settings.navbarHeaderColor='bg-green';
+          app.settings.navbarCollapseColor='bg-green-collapse';
+          app.settings.asideColor='bg-green';
+          app.settings.navbarTabColor='bg-green-tab';
+          app.settings.bgChange='bg-green-change';
+          app.settings.asideBackground='url(img/green-aside.png) no-repeat 0 0';
+          app.settings.headerBackground='url(img/green-header.png) no-repeat 0 0';
+          app.settings.contentBackground='#f6fcef';
+         ">
+          <input type="radio" ng-model="app.settings.themeID" value="10">
+          <span class="block bg-light clearfix pos-rlt">
+            <span class="active pos-abt w-full h-full bg-black-opacity text-center">
+              <i class="glyphicon glyphicon-ok text-white m-t-xs"></i>
+            </span>
+            <b class="skin-green header"></b>
+            <b class="skin-green header"></b>
+            <b class="skin-green"></b>
+          </span>
+        </label> -->
+
+    </div>
+</div>
+<!-- /settings

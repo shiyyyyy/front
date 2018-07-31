@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title>%TITLE%</title>
+    <meta name="description" content="%DESC%" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="renderer" content="webkit" />
+    
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/simple-line-icons.css" type="text/css" />
+    <link rel="stylesheet" href="css/font.css" type="text/css" />
+    <link rel="stylesheet" href="css/app.css" type="text/css" />
+    <link rel="stylesheet" href="css/style.css?_=%dc%" type="text/css" />
+    <link rel="stylesheet" href="css/page.css?_=%dc%" type="text/css" />
+
+
+    <link rel="stylesheet" href="lib/angular-ui-select/select.min.css" type="text/css" />
+    <link rel="stylesheet" href="lib/angular-ui-grid/ui-grid.css" type="text/css" />
+    <link rel="stylesheet" href="lib/angular-ui-grid/ui-grid.bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="lib/pikaday/pikaday.css" type="text/css" />
+    <link rel="stylesheet" href="lib/bootstrap-datepicker/bootstrap-datepicker.min.css" type="text/css" />
+    <link rel="stylesheet" href="lib/perfect-scrollbar/perfect-scrollbar.css" type="text/css" />
+    <link rel="stylesheet" href="lib/toastr/toastr.min.css" type="text/css"/>
+    <link rel="stylesheet" href="lib/c3/c3.min.css" type="text/css">
+    <link rel="stylesheet" href="lib/pivot/pivot.min.css" type="text/css">
+    <link rel="stylesheet" href="lib/textangular/textAngular.css" type="text/css">
+    <link rel="stylesheet" href="lib/fullcalendar/fullcalendar.css" type="text/css">
+    <link rel="stylesheet" href="lib/ng-img-crop/ng-img-crop.css" type="text/css">
+	
+	<link rel="icon" href="favicon.ico">
+ 
+</head>
+<body>
+    <div class="app" id="app"
+        ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container,}"
+        ng-include="'views/portal.html?_=%dc%'"
+        ng-style="{'background':app.settings.contentBackground}">
+    </div>
+
+    <div class="mask"></div>
+    <input type="file" name="file" class="hidden" id="comm_upload"/>
+    <ng-include src="'tpl/common.html?_=%dc%'"></ng-include>
+    <ng-include src="'tpl/business.html?_=%dc%'"></ng-include>
+    <ng-include src="'tpl/finance.html?_=%dc%'"></ng-include>    
+    <!-- jQuery -->
+    <script src="lib/jquery/jquery.min.js"></script> 
+    <!-- <script src="lib/jquery/jquery-ui.min.js" type="text/javascript"></script> -->
+    <!-- Angular -->
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular/angular-sanitize.min.js"></script>
+    <script src="lib/angular/angular-cookies.min.js"></script>
+    <script src="lib/sortable/jquery.sortable.js"></script>
+    <!-- textAngular -->
+    <script src="lib/textangular/textAngular-rangy.min.js"></script>
+    <script src="lib/textangular/textAngular-sanitize.min.js"></script>
+    <script src="lib/textangular/textAngular.min.js"></script>
+    <!-- Vendor -->
+    <script src="lib/g2/data-set.min.js"></script>
+    <script src="lib/underscore/underscore-min.js"></script>
+    <script src="lib/pace/pace.min.js"></script>
+    <script src="lib/pikaday/moment.min.js"></script>
+    <script src="lib/pikaday/pikaday.js"></script>
+    <script src="lib/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="lib/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="lib/toastr/toastr.min.js"></script>
+    <script src="lib/c3/d3.min.js" type="text/javascript"></script>
+    <script src="lib/c3/c3.min.js" type="text/javascript"></script>
+    <script src="lib/pivot/pivot.min.js" type="text/javascript"></script>
+    <script src="lib/pivot/c3_renderers.min.js" type="text/javascript"></script>
+    <script src="lib/hz2py/hz2py.js" type="text/javascript"></script>
+
+    <script src="lib/angular-ui-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="lib/angular-ui-select/select.min.js"></script>
+    <script src="lib/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="lib/angular-ui-mask/mask.min.js"></script>
+    <script src="lib/angular-bootstrap-contextmenu/contextMenu.js"></script>
+    <script src="lib/angular-ui-calendar/calendar.js"></script>
+    <script src="lib/fullcalendar/fullcalendar.js"></script>
+    <script src="lib/fullcalendar/gcal.min.js"></script>
+
+    <!-- g2 -->
+    <script src="lib/g2/g2.min.js"></script>
+    <script src="lib/g2/g2-plugin-slider.js"></script>
+
+    <script  src="lib/pdf/pdf.js"></script>
+
+    <script  src="lib/xlsx/xlsx.full.min.js"></script>
+    <!-- App -->
+    <script src="js/app.js?_=%dc%"></script>
+    <script src="js/appConst.js?_=%dc%"></script>
+
+    <script src="base/services/AjaxSrvc.js?_=%dc%"></script>
+    <script src="base/services/InitSrvc.js?_=%dc%"></script>
+    <script src="base/services/I18nSrvc.js?_=%dc%"></script>
+    <script src="base/services/CommSrvc.js?_=%dc%"></script>
+    <script src="base/services/FieldSrvc.js?_=%dc%"></script>
+    <script src="base/services/ActionSrvc.js?_=%dc%"></script>
+    <script src="base/services/MsgSrvc.js?_=%dc%"></script>
+
+    <script src="js/services/RootSrvc.js?_=%dc%"></script>
+    <script src="js/services/BarStatSrvc.js?_=%dc%"></script>
+    <script src="js/services/EnumSrvc.js?_=%dc%"></script>
+    <script src="js/services/SysSrvc.js?_=%dc%"></script>
+    <script src="js/services/OrgSrvc.js?_=%dc%"></script>
+    <script src="js/services/OpSrvc.js?_=%dc%"></script>
+    <script src="js/services/InvoiceSrvc.js?_=%dc%"></script>
+    <script src="js/services/FinSrvc.js?_=%dc%"></script>
+    <script src="js/services/SaleSrvc.js?_=%dc%"></script>
+    <script src="js/services/ResSrvc.js?_=%dc%"></script>
+    <script src="js/services/AccSrvc.js?_=%dc%"></script>
+    <script src="js/services/StatSrvc.js?_=%dc%"></script>
+    <script src="js/services/ProductSrvc.js?_=%dc%"></script>
+    <script src="js/services/TySrvc.js?_=%dc%"></script>
+    <script src="js/services/SuppSrvc.js?_=%dc%"></script>
+    <script src="js/services/GallerySrvc.js?_=%dc%"></script>
+    <script src="js/services/HomeSrvc.js?_=%dc%"></script>
+    <script src="js/services/QcSrvc.js?_=%dc%"></script>
+    <script src="js/services/EventOrderSrvc.js?_=%dc%"></script>
+    <script src="js/services/PdfSrvc.js?_=%dc%"></script>
+
+    <script src="js/appFilter.js?_=%dc%"></script>
+    <script src="js/appDirective.js?_=%dc%"></script>
+
+    <script src="js/directives/ui-butterbar.js"></script>
+    <script src="js/directives/ui-nav.js"></script>
+
+    <script type="text/javascript">
+        v = {
+            'views/sys/config.html' : 'views/sys/config.html?_=%dc%',
+        };
+    </script>
+    <script src="lib/ng-img-crop/ng-img-crop.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8" />
+    <title>%TITLE%</title>
+    <meta name="description" content="%DESC%" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/simple-line-icons.css" type="text/css" />
+    <link rel="stylesheet" href="css/font.css" type="text/css" />
+    <link rel="stylesheet" href="css/app.css" type="text/css" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/page.css" type="text/css" />
+    <link rel="icon" href="favicon.ico">
+</head>
+
+<body>
+    <div class="app hidden" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}">
+        <div class="dropdown pull-right m-r-xxl" uib-dropdown>
+            <a href class="dropdown-toggle" uib-dropdown-toggle ng-init="::language=['中文','English'][lang]">
+              {{::language}} <b class="caret"></b>
+            </a>
+            <!-- dropdown -->
+            <ul class="dropdown-menu animated fadeInRight w" uib-dropdown-menu>
+                <li ng-repeat="label in ::['中文','English']">
+                    <a ng-click="set_lang($index)" href>{{::label}}</a>
+                </li>
+            </ul>
+            <!-- / dropdown -->
+        </div>
+        <div class="container w-xxl w-auto-xs" ng-init="app.settings.container = false;">
+            <div ng-if="logo" >
+                <img ng-src="{{logo}}" class="img-responsive center-block" style="max-height: 180px" />
+            </div>
+            <div class="navbar-brand block m-t" ng-if="!logo">{{app.name}}</div>
+            <div class="m-b-lg">
+                <div class="wrapper text-center">
+                    <strong>{{'USER_LOGIN' | i18n}}</strong>
+                </div>
+                <form name="form" class="form-validation">
+                    <div class="text-danger wrapper text-center" ng-show="authError">
+                        {{authError}}
+                    </div>
+                    <div class="list-group list-group-sm">
+                        <div class="list-group-item" ng-if="saas" ng-show="show_user">
+                            <input type="text" name="user" placeholder="{{'ENTERP_NAME' | i18n}}" class="form-control no-border" ng-model="data.user" required>
+                        </div>
+                        <div class="list-group-item">
+                            <input type="text" name="account" placeholder="{{'ACCOUNT' | i18n}}" class="form-control no-border" ng-model="data.account" required>
+                        </div>
+                        <div class="list-group-item">
+                            <input type="password" name="password" placeholder="{{'PASSWORD' | i18n}}" class="form-control no-border" ng-model="data.password" required>
+                        </div>
+                        <div class="list-group-item posi-rela">
+                            <input type="text" name="verification_code" placeholder="{{'VERIFICATION_CODE' | i18n}}" class="form-control no-border ver-code-input" required>
+                            <img src="http://39.104.73.112/cj-back/files/TY_CJ/captcha/1531446888.7948.jpg" alt="" class="ver-code-input-img" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block" ng-click="login()" ng-disabled='form.$invalid'>
+                        {{'LOGIN' | i18n}}
+                    </button>
+                </form>
+            </div>
+            <div class="text-center">
+                <p><small class="text-muted">%COPY%<br>&copy; 2018</small></p>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+    <script src="lib/jquery/jquery.min.js"></script>
+    <!-- Angular -->
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular/angular-sanitize.min.js"></script>
+    <!-- Vendor -->
+    <script src="lib/underscore/underscore-min.js"></script>
+    <script src="lib/angular-ui-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <!-- App -->
+    <script type="text/javascript">
+    (function() {
+        'use strict';
+        angular.module('app', ['ui.bootstrap']);
+        angular.module('app').run(run);
+
+        run.$inject = ['appConst', '$http', '$rootScope'];
+
+        function run(appConst, $http, $rootScope) {
+            $http.get(appConst.HOST + '/api/Front/get_logo').then(function(r) {
+                r = r.data.data;
+                if (r.logo) {
+                    $rootScope.logo = appConst.HOST + '/' + r.logo;
+                    localStorage.logo = appConst.HOST + '/' + r.logo;
+                } else {
+                    delete localStorage.logo;
+                }
+                if(r.user){
+                    $rootScope.data.user = r.user;
+                }else{
+                    $rootScope.show_user = true;
+                }
+                $('#app').toggleClass('hidden');
+            }, function(e) {
+                delete localStorage.logo;
+                $('#app').toggleClass('hidden');
+            });
+            // config
+            $rootScope.app = {
+                name: '%TITLE%',
+                version: '3.0.0',
+                // for chart colors
+                color: {
+                    primary: '#7266ba',
+                    info: '#23b7e5',
+                    success: '#27c24c',
+                    warning: '#fad733',
+                    danger: '#f05050',
+                    light: '#e8eff0',
+                    dark: '#3a3f51',
+                    black: '#1c2b36'
+                },
+                settings: {
+                    themeID: 1,
+                    navbarHeaderColor: 'bg-black',
+                    navbarCollapseColor: 'bg-white-only',
+                    asideColor: 'bg-black',
+                    headerFixed: true,
+                    asideFixed: true,
+                    asideFolded: false,
+                    asideDock: false,
+                    container: false
+                }
+            };
+
+            $rootScope.saas = window.saas;
+            $rootScope.data = $rootScope.saas ? {
+                user: localStorage.user
+            } : {};
+            $rootScope.login = function() {
+                $http.post(
+                        appConst.HOST + '/Session/login?user=' + ($rootScope.saas ? $rootScope.data.user : ''),
+                        $rootScope.data
+                    )
+                    .then(function(response) {
+                        var data = response.data;
+                        if (data.success) {
+                            if ($rootScope.saas) {
+                                localStorage.user = $rootScope.data.user;
+                            }
+                            localStorage[appConst.APP_NAME] = angular.toJson(data.user);
+                            window.location = './';
+                        } else {
+                            alert(data.message);
+                        }
+                    }, function() {
+                        console.log(arguments);
+                    });
+            };
+            // $('.login-form input').keypress(function (e) {
+            //     if (e.which == 13) {
+            //         $rootScope.login();
+            //     }
+            // });
+
+        }
+    })();
+    </script>
+    <script src="js/empty.js" type="text/javascript"></script>
+    <script src="js/appConst.js"></script>
+    <script src="base/services/I18nSrvc.js"></script>
+    <script src="js/appFilter.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,287 @@
+<div class="padder">
+    <div class="row m-n">
+        <div class="col-sm-4 homeModal pl-0" style="margin: 20px 0 15px 0;">
+            <div class="infoModal shadow">
+                <div class="topTitle clearfix">
+                    <div class="titleLeft">
+                        <i class="fa fa-user"></i>
+                        <span>个人信息</span>
+                    </div>
+                </div>
+                <div class="bottomInfo">
+                    <div class="d-flex">
+                        <div class="personImg text-center">
+                            <img class="rounded" ng-src="{{data['个人头像'][0].pass_photo?(appConst.HOST+'/'+data['个人头像'][0].pass_photo):(appConst.HOST+'/'+'profile.png')}}" alt="">  
+                        </div>
+                        <div class="personInfo">
+                            <ul>
+                                <li class="text-bold" style="font-size: 16px;line-height: 20px;">欢迎登录！</li>
+                                <li>{{data.company_info}}</li>
+                                <li>{{data.department_info}}</li>
+                                <li>{{data.employee_info}}</li>
+                            </ul>                        
+                        </div>                        
+                    </div>
+                    <div class="infoBtn">
+                        <a ng-click="trigger('修改头像')">修改头像</a>
+                        <a ng-click="trigger('修改密码')">{{::'CHANGE_PW' | i18n}}</a>
+                        <a ng-click="close_all_msg()">{{::'CLOSE_MSG' | i18n}}</a>                        
+                        <a ng-click="app.theme=1">{{::'SET_THEME' | i18n}}</a>
+                        <a ng-click="logout()">{{::'LOGOUT' | i18n}}</a>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8 no-padder" style="margin: 20px 0 15px 0;">
+            <div class="infoModal shadow">
+                <div class="topTitle clearfix">
+                    <div class="titleLeft">
+                        <i class="fa fa-list-alt"></i>
+                        <span>站内新闻</span>
+                    </div>
+                    <div class="titleRight">
+                        <button ng-click="open_mod('新闻中心',null)">{{'MORE' | i18n}}</button>
+                    </div>
+                </div>
+                <div class="bottomInfo">
+                    <table class="table table-striped m-b-none tableLayout">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-7">{{'标题'|i18n}}</th>
+                                <th class="col-sm-2">{{'CREATOR'|i18n}}</th>
+                                <th class="col-sm-3">{{'CREATE_TIME'|i18n}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="(key,item) in data['新闻通知']">
+                                <td class="col-sm-7" >
+                                    <a class="text-action" href="" uib-tooltip="{{item.title}}" tooltip-append-to-body="true" 
+                                        ng-click="trigger('查看新闻',null,null,item)" ng-if="item.title">{{item.title}}</a>
+                                </td>
+                                <td class="col-sm-2">{{item.employee_name}}</td>
+                                <td class="col-sm-3">{{item.create_at}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="row m-n">
+        <div class="col-sm-8 homeModal pl-0 mb-15">
+            <div class="shadow">
+                <div class="infoModal">
+                    <div class="topTitle clearfix">
+                        <div class="titleLeft">
+                            <i class="fa fa-bullhorn"></i>
+                            <span>公告通知</span>
+                        </div>
+                        <div class="titleRight">
+                            <button ng-click="open_mod('公告中心',null)">{{'MORE' | i18n}}</button>
+                        </div>
+                    </div>
+                    <div class="bottomInfo">
+                        <table class="table table-striped m-b-none tableLayout">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-7">{{'标题'|i18n}}</th>
+                                    <th class="col-sm-2">{{'CREATOR'|i18n}}</th>
+                                    <th class="col-sm-3">{{'CREATE_TIME'|i18n}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key,item) in data['公告通知']">
+                                    <td class="col-sm-7">
+                                        <a class="text-action" href="" uib-tooltip="{{item.title}}" tooltip-append-to-body="true" ng-click="trigger('查看公告',null,null,item)" ng-if="item.title">{{item.title}}</a></td>
+                                    <td class="col-sm-2">{{item.employee_name}}</td>
+                                    <td class="col-sm-3">{{item.create_at}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="infoModal">
+                    <div class="topTitle clearfix">
+                        <div class="titleLeft">
+                            <i class="fa fa-gavel"></i>
+                            <span>审批任务</span>
+                        </div>
+                        <div class="titleRight">
+                            <button ng-click="open_mod('审批任务',null)">{{'MORE' | i18n}}</button>
+                        </div>
+                    </div>
+                    <div class="bottomInfo">
+                        <table class="table table-striped m-b-none tableLayout">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-7">{{'标题'|i18n}}</th>
+                                    <th class="col-sm-2">{{'CREATOR'|i18n}}</th>
+                                    <th class="col-sm-3">{{'CREATE_TIME'|i18n}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key,item) in data['审批任务']">
+                                    <td class="col-sm-7">{{pick(item.title)}}</td>
+                                    <td class="col-sm-2">{{item.employee_name}}</td>
+                                    <td class="col-sm-3">{{item.create_at}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 no-padder mb-15">
+            <div class="infoModal shadow">
+                <div class="topTitle clearfix">
+                    <div class="titleLeft">
+                        <i class="fa fa-calendar"></i>
+                        <span>事件日程</span>
+                    </div>
+                </div>
+                <div class="bottomInfo">
+                    <div ui-calendar="uiConfig.calendar" ng-model="eventSources"></div>
+                </div>
+            </div>
+        </div>    
+    </div>
+    <div class="row m-n">
+        <div class="col-sm-8 homeModal pl-0 mb-15">
+            <div class="infoModal shadow">
+                <div class="topTitle clearfix">
+                    <div class="titleLeft">
+                        <i class="fa fa-comment"></i>
+                        <span>我的消息</span>
+                    </div>
+                    <div class="titleRight">
+                        <button ng-click="open_mod('消息通知',null)">{{'MORE' | i18n}}</button>
+                    </div>
+                </div>
+                <div class="bottomInfo">
+                    <table class="table table-striped m-b-none tableLayout">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-7">{{'标题'|i18n}}</th>
+                                <th class="col-sm-2">{{'CREATOR'|i18n}}</th>
+                                <th class="col-sm-3">{{'CREATE_TIME'|i18n}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="(key,item) in data['消息通知']">
+                                <td class="col-sm-7">{{pick(item.title)}}</td>
+                                <td class="col-sm-2">{{item.publisher_name}}</td>
+                                <td class="col-sm-3">{{item.create_at}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> 
+        <div class="col-sm-4 homeModal no-padder mb-15" ng-if = "data['订单数据']['mod']">
+            <div class="infoModal shadow">
+                <div class="topTitle clearfix">
+                    <div class="titleLeft">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>最近订单</span>
+                    </div>
+                    <div class="titleRight">
+                        <button ng-click="open_mod(data['订单数据']['mod'],data['订单数据']['cfg'])">{{'MORE' | i18n}}</button>
+                    </div>
+                </div>
+                <div class="bottomInfo row m-n" style="padding: 52px 0;">
+                    <div class="col-sm-3 p-0">
+                        <div class="orderItem todayGroup">
+                            <div>{{data['订单数据']['today_dep']}}</div>
+                            <div>今日出团</div>                            
+                        </div>                        
+                    </div>
+                    <div class="col-sm-3 p-0">
+                        <div class="orderItem todayBackGroup">
+                            <div>{{data['订单数据']['today_back']}}</div>
+                            <div>今日回团</div>                          
+                        </div>                        
+                    </div>
+                    <div class="col-sm-3 p-0">
+                        <div class="orderItem tomorrowGroup">
+                            <div>{{data['订单数据']['tomorrow_dep']}}</div>
+                            <div>明日出团</div>                          
+                        </div>                        
+                    </div>
+                    <div class="col-sm-3 p-0">
+                        <div class="orderItem tomorrowBackGroup">
+                            <div>{{data['订单数据']['tomorrow_back']}}</div>
+                            <div>明日回团</div>                           
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>               
+    </div>
+    <div class="row m-n" ng-if= "data['账户数据']['mod']">
+        <div class="shadow clearfix">
+            <div class="col-sm-12 topTitle clearfix">
+                <div class="titleLeft">
+                    <i class="fa fa-yen"></i>
+                    <span>我的账户</span>
+                </div>
+                <div class="titleRight">
+                    <button ng-click="open_mod(data['账户数据']['mod'],data['账户数据']['cfg'])">{{'MORE' | i18n}}</button>
+                </div>                                
+            </div>
+            <div class="col-sm-2 accountItem">
+                <div class="accountImg income"></div>
+                <div class="accountingTitle">收入总计</div>
+                <div class="accountPrice">￥{{data['账户数据']['income']}}</div>
+            </div>
+            <div class="col-sm-2 accountItem ">
+                <div class="accountImg expend"></div>
+                <div class="accountingTitle">支出总计</div>
+                <div class="accountPrice">￥{{data['账户数据']['expense']}}</div>
+            </div>
+            <div class="col-sm-2 accountItem">
+                <div class="accountImg currentBalance"></div>
+                <div class="accountingTitle">时时余额</div>
+                <div class="accountPrice">￥{{data['账户数据']['balance']}}</div>
+            </div>
+            <div class="col-sm-2 accountItem">
+                <div class="accountImg freezingBalance"></div>
+                <div class="accountingTitle">冻结余额</div>
+                <div class="accountPrice">￥{{data['账户数据']['freeze']}}</div>
+            </div>
+            <div class="col-sm-2 r-accountItem">
+                <div class="accountImg availableBalance"></div>
+                <div class="accountingTitle">可用余额</div>                        
+                <div class="accountPrice">￥{{data['账户数据']['avail_balance']}}</div>
+            </div>                         
+            <div class="col-sm-2 r1-accountItem">
+                <div class="accountImg expenseToBeApproved"></div>                
+                <div class="r-accountInfo">
+                    <div class="r-accountingTitle">待支金额</div>
+                    <div class="r-accountPrice">￥{{data['账户数据']['avail_balance']}}</div>
+                </div>
+            </div>             
+        </div>       
+    </div>
+</div>
+<!--     <div class="col-sm-4" style="border: 1px solid #f00;">
+        <div class="infoModal">
+            <div class="topTitle">
+                <div>
+                    <i></i>
+                    <span>最近订单</span>
+                </div>
+                <div>
+                    <i></i>
+                </div>
+            </div>
+            <div class="bottomInfo">
+              <ul>
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+              </ul>
+            </div>
+        </div>
+    </div> -->
+<div class="voice-btn" on-hold="start()" on-release="end()" style="display: inline-block;"></div>

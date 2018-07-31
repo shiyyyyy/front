@@ -1,0 +1,1112 @@
+<!-- bug 4143  导出订单你对账 -->
+<script type="text/ng-template" id="export_affirm_order.html">
+     <div modal-movable class="tu-modal-head">
+        <h3 class="text-center tu-modal-title">{{::text}}</h3>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group ">
+            <label>{{::'REQUIRED' | i18n}}</label>
+            <br/>
+            <div class="row">
+              <div class="col-md-3 m-l" ng-repeat="(r_field,r_filter) in required_filter">
+                <input ng-if="r_filter.type=='date'" type="text" placeholder="{{r_filter.text}}" class="form-control" ng-model="search[r_field]" ui-pikaday />
+                <ui-select 
+                    ng-if="r_filter.type && !{date:1}[r_filter.type]"
+                    ng-model="search[r_field]" ng-change="searchChange(required_filter,r_field,search)" ng-disabled="disabled" >
+                    <ui-select-match placeholder="{{r_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                        <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(r_filter,search,r_field) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{{::'OPTIONAL' | i18n}}</label>
+            <br/>
+            <div class="row">
+              <div class="col-md-3 m-l m-b" ng-repeat="(o_field,o_filter) in optional_filter">
+                <input ng-if="o_filter.type=='date'" type="text" placeholder="{{o_filter.text}}" class="form-control" ng-model="search[o_field]" ui-pikaday />
+                <ui-select 
+                    ng-if="o_filter.type && !{date:1}[o_filter.type]"
+                    ng-model="search[o_field]" ng-change="searchChange(optional_filter,o_field,search)" ng-disabled="disabled" >
+                    <ui-select-match placeholder="{{o_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                        <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(o_filter,search,o_field) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="form-group">
+            <label>{{::'KEY_WORD' | i18n}}</label>
+            <br/>
+            <div class="row">
+              <div class="input-group" style="padding-left: 30px;">
+                <span class="input-group-addon input-sm no-border no-bg dropdown" uib-dropdown>
+                    <a href class="dropdown-toggle" uib-dropdown-toggle>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight w" uib-dropdown-menu>
+                        <li ng-repeat="(k_field,k_word) in key_word"
+                         ng-init = "vm.key_field = vm.key_field||k_field">
+                              <a ng-click="search[vm.key_field] = '';vm.key_field = k_field;" href>
+                              {{k_word.text}}</a>
+                        </li>
+                    </ul>
+                </span>
+                <input type="text" class="form-control input-sm no-bg text-md" style="width: 75%"  placeholder="{{key_word[vm.key_field].text}}" ng-model="search[vm.key_field]">
+              </div>
+            </div>
+        </div> -->
+
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="preview()" ><strong>{{::'PREVIEW' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>
+
+
+
+<script type="text/ng-template" id="export_ty_order.html">
+     <div modal-movable class="tu-modal-head">
+        <h3 class="text-center tu-modal-title">{{::text}}</h3>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group ">
+            <label>{{::'REQUIRED' | i18n}}</label>
+            <br/>
+            <div class="row">
+              <div class="col-md-3 m-l" ng-repeat="(r_field,r_filter) in required_filter">
+                <input ng-if="r_filter.type=='date'" type="text" placeholder="{{r_filter.text}}" class="form-control" ng-model="search[r_field]" ui-pikaday />
+                <ui-select 
+                    ng-if="r_filter.type && !{date:1}[r_filter.type]"
+                    ng-model="search[r_field]" ng-change="searchChange(required_filter,r_field,search)" ng-disabled="disabled" >
+                    <ui-select-match placeholder="{{r_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                        <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(r_filter,search,r_field) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{{::'OPTIONAL' | i18n}}</label>
+            <br/>
+            <div class="row">
+              <div class="col-md-3 m-l m-b" ng-repeat="(o_field,o_filter) in optional_filter">
+                <input ng-if="o_filter.type=='date'" type="text" placeholder="{{o_filter.text}}" class="form-control" ng-model="search[o_field]" ui-pikaday />
+                <ui-select 
+                    ng-if="o_filter.type && !{date:1}[o_filter.type]"
+                    ng-model="search[o_field]" ng-change="searchChange(optional_filter,o_field,search)" ng-disabled="disabled" >
+                    <ui-select-match placeholder="{{o_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                        <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(o_filter,search,o_field) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="preview()" ><strong>{{::'PREVIEW' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>
+
+<!-- bug 4185 -->
+<script type="text/ng-template" id="export_order.html">
+     <div modal-movable class="tu-modal-head">
+        <h3 class="text-center tu-modal-title">{{::text}}</h3>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <!--<div class="form-group ">-->
+            <!--<label>{{::'REQUIRED' | i18n}}</label>-->
+            <!--<br/>-->
+            <!--<div class="row">-->
+              <!--<div class="col-md-5 m-l" ng-repeat="(r_field,r_filter) in required_filter">-->
+                <!--<input ng-if="r_filter.type=='date'" type="text" placeholder="{{r_filter.text}}" class="form-control" ng-model="search[r_field]" ui-pikaday />-->
+                <!--<ui-select -->
+                    <!--ng-if="r_filter.type && !{date:1}[r_filter.type]"-->
+                    <!--ng-model="search[r_field]" ng-change="searchChange(required_filter,r_field,search)" ng-disabled="disabled" >-->
+                    <!--<ui-select-match placeholder="{{r_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}-->
+                        <!--<a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>-->
+                    <!--</ui-select-match>-->
+                    <!--<ui-select-choices repeat="obj.key as (key,obj) in get_enum(r_filter,search,r_field) | filter: {value:$select.search}">-->
+                        <!--<div ng-bind-html="obj.value | highlight: $select.search"></div>-->
+                    <!--</ui-select-choices>-->
+                <!--</ui-select>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="form-group">
+            <label>{{::'OPTIONAL' | i18n}}</label>
+            <br/>
+            <div class="row">
+              <div class="col-md-5 m-l m-b" ng-repeat="(o_field,o_filter) in optional_filter">
+                <input ng-if="o_filter.type=='date'" type="text" placeholder="{{o_filter.text}}" class="form-control" ng-model="search[o_field]" ui-pikaday />
+                <ui-select 
+                    ng-if="o_filter.type && !{date:1}[o_filter.type]"
+                    ng-model="search[o_field]" ng-change="searchChange(optional_filter,o_field,search)" ng-disabled="disabled" >
+                    <ui-select-match placeholder="{{o_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                        <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(o_filter,search,o_field) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>{{::'KEY_WORD' | i18n}}</label>
+            <br/>
+            <div class="row">
+              <div class="input-group" style="padding-left: 30px;">
+                <span class="input-group-addon input-sm no-border no-bg dropdown" uib-dropdown>
+                    <a href class="dropdown-toggle" uib-dropdown-toggle>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight w" uib-dropdown-menu>
+                        <li ng-repeat="(k_field,k_word) in key_word"
+                         ng-init = "vm.key_field = vm.key_field||k_field">
+                              <a ng-click="search[vm.key_field] = '';vm.key_field = k_field;" href>
+                              {{k_word.text}}</a>
+                        </li>
+                    </ul>
+                </span>
+                <input type="text" class="form-control input-sm no-bg text-md" style="width: 85%"  placeholder="{{key_word[vm.key_field].text}}" ng-model="search[vm.key_field]">
+              </div>
+            </div>
+        </div>
+
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="preview()" ><strong>{{::'PREVIEW' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>
+<script type="text/ng-template" id="export_order_page.html">
+     <div modal-movable class="tu-modal-head">
+        <h3 class="text-center tu-modal-title">{{::text}}</h3>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group ">
+            <label>{{::'REQUIRED' | i18n}}</label>
+            <br/>
+            <div class="row">
+                页数从
+                <input type="text" class="form-control" ng-model="data.page_from" value=""/>
+                到
+                <input type="text"  class="form-control" ng-model="data.page_to" value=""/>
+            </div>
+        </div>
+
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="export_page()" ><strong>{{::'EXPORT_PAGE' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>
+<!--===============settle_lock===================-->
+<script type="text/ng-template" id="settle_lock.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body" ng-init="::_cfg=blocks[block]">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+              <label class="col-lg-2 ">{{::'ORDER_LOCK' | i18n}}</label>
+              <div class="col-lg-10">
+                <input type="radio" value="0" ng-model="data.settle_state_order" >{{'UNLOCKED' | i18n}}&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" value="1" ng-model="data.settle_state_order" >{{'LOCKED' | i18n}}
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-lg-2 ">{{::'ACC_LOCK' | i18n}}</label>
+              <div class="col-lg-10">
+                <input type="radio" value="0" ng-model="data.settle_state_acc" >{{'UNLOCKED' | i18n}}&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" value="1" ng-model="data.settle_state_acc" >{{'LOCKED' | i18n}}
+              </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+<!--============== group_comment ================-->
+
+<script type="text/ng-template" id="group_comment.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label >{{::'SALE_COMMENT' | i18n}}</label>
+                <textarea class="form-control" ng-model = "data.sale_comment"></textarea>
+            </div>
+            <div class="form-group">
+                <label >{{::'OP_COMMENT' | i18n}}</label>
+                <textarea class="form-control" ng-model = "data.comment"></textarea>
+            </div>
+
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+<!--============== common_comment ================-->
+
+<script type="text/ng-template" id="common_comment.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+              <input type="text" class="form-control" ng-model="data.value" />
+            </div>
+
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+
+    </div>
+</script>
+
+<!--============== choose fin doc type================-->
+
+<script type="text/ng-template" id="choose_fin_doc_type.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="tu-grid-label m-l">{{::'DOC_TYPE' | i18n}}<i class="{{expandCls[0]}}"></i>
+                </label>
+                <div class="clearfix">
+                    <span ng-repeat="item in get_enum(data)" class="search-setting-item col-md-6" style="padding-top: 8px;padding-left: 16px;">
+                        <input type="radio" value="{{item.key}}"  ng-model="data.doc_type" />
+                        <label>&nbsp;&nbsp;{{item.name}}</label>
+                    </span>
+                </div>
+            </div> 
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div> 
+</script>
+
+
+<!--============== doc_export_type_choose================-->
+
+<script type="text/ng-template" id="doc_export_type_choose.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="tu-grid-label m-l">{{::'DOC_TYPE' | i18n}}<i class="{{expandCls[0]}}"></i>
+                </label>
+                <div class="clearfix">
+                    <span ng-repeat="item in data.doc_kinds" class="search-setting-item col-md-5">
+                        <input type="radio" value="{{item.id}}"  ng-model="data.doc_type"/>
+                        <label>{{item.name}}</label>
+                    </span>
+                </div>
+            </div> 
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div> 
+</script>
+
+<!--============== choose_settle ================-->
+
+<script type="text/ng-template" id="choose_settle.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+              <label class="col-lg-2 control-label">{{::'TYPE' | i18n}}</label>
+              <div class="col-lg-10">
+                <input type="radio" value="Supplier" ng-model="data.settle_obj_type" ng-change="data.settle_obj_id=0">{{'SUPPLIER' | i18n}}&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" value="FullEmployee" ng-model="data.settle_obj_type" ng-change="data.settle_obj_id=0">{{'EMPLOYEE' | i18n}}&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" value="OrderSettleDepartment" ng-model="data.settle_obj_type" ng-change="data.settle_obj_id=0">{{'DEPARTMENT' | i18n}}&nbsp;&nbsp;&nbsp;&nbsp;
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-lg-2 control-label">{{::'OBJ' | i18n}}</label>
+              <div class="col-lg-10">
+                    <ui-select ng-model="data.settle_obj_id" ng-change="data.settle_obj=$select.selected.value">
+                        <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum(data.settle_obj_type) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+              </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+
+    </div>
+</script>
+
+<!--===============fin_variable===================-->
+<script type="text/ng-template" id="fin_variable.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+
+        <div class="panel panel-default" ng-init="::_cfg=blocks[history]" ng-if = "blocks[history]">
+            <div class="panel-heading font-bold" ng-init="show_h=true;icon_h='fa-minus'">
+                <a ng-click="show_h=!show_h;icon_h=show_h?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon_h"></i> {{::_cfg.text}}</a>
+            </div>
+            <div class="panel-body" ng-show="show_h">
+              <div ui-grid="gridCfg[history]" class="bg-white m-b" ng-style="{height:expand_height(gridCfg[history])}"
+                      ui-grid-cellNav
+                      ui-grid-resize-columns
+                      ui-grid-auto-resize
+                      ui-grid-pinning
+                      ui-grid-save-state>
+              </div> 
+            </div>
+        </div>
+
+        <div class="panel panel-default" ng-init="::_cfg=blocks[block]" ng-if = "blocks[block]">
+            <div class="panel-heading font-bold" ng-init="show=true;icon='fa-minus'">
+                <a ng-click="show=!show;icon=show?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon"></i> {{::_cfg.text}}</a>
+            </div>
+            <div class="panel-body" ng-show="show">
+              <div ui-grid="gridCfg[block]" class="bg-white m-b" ng-style="{height:expand_height(gridCfg[block])}"
+                   ui-grid-edit
+                   ui-grid-cellNav
+                   ui-grid-resize-columns
+                   ui-grid-auto-resize
+                   ui-grid-pinning
+                   ui-grid-save-state>
+              </div> 
+            </div>
+        </div>
+
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>
+
+<!--===============fin_variable_see===================-->
+<script type="text/ng-template" id="fin_variable_see.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+
+        <div class="panel panel-default" ng-init="::_cfg=blocks[history]" ng-if = "blocks[history]">
+            <div class="panel-heading font-bold" ng-init="show_h=true;icon_h='fa-minus'">
+                <a ng-click="show_h=!show_h;icon_h=show_h?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon_h"></i> {{::_cfg.text}}</a>
+            </div>
+            <div class="panel-body" ng-show="show_h">
+              <div ui-grid="gridCfg[history]" class="bg-white m-b" ng-style="{height:expand_height(gridCfg[history])}"
+                      ui-grid-cellNav
+                      ui-grid-resize-columns
+                      ui-grid-auto-resize
+                      ui-grid-pinning
+                      ui-grid-save-state>
+              </div> 
+            </div>
+        </div>
+    </div>
+</script>
+
+<!--===============export_data===================-->
+<script type="text/ng-template" id="export_data.html">
+     <div modal-movable class="tu-modal-head">
+        <h3 class="text-center tu-modal-title">{{::text}}</h3>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <!--<div class="form-group ">-->
+            <!--<label>{{::'REQUIRED' | i18n}}</label>-->
+            <!--<br/>-->
+            <!--<div class="row">-->
+              <!--<div class="col-md-5 m-l" ng-repeat="(r_field,r_filter) in required_filter">-->
+                <!--<input ng-if="r_filter.type=='date'" type="text" placeholder="{{r_filter.text}}" class="form-control" ng-model="search[r_field]" ui-pikaday />-->
+                <!--<ui-select -->
+                    <!--ng-if="r_filter.type && !{date:1}[r_filter.type]"-->
+                    <!--ng-model="search[r_field]" ng-change="searchChange(required_filter,r_field,search)" ng-disabled="disabled" >-->
+                    <!--<ui-select-match placeholder="{{r_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}-->
+                        <!--<a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>-->
+                    <!--</ui-select-match>-->
+                    <!--<ui-select-choices repeat="obj.key as (key,obj) in get_enum(r_filter,search,r_field) | filter: {value:$select.search}">-->
+                        <!--<div ng-bind-html="obj.value | highlight: $select.search"></div>-->
+                    <!--</ui-select-choices>-->
+                <!--</ui-select>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="form-group">
+            <label>{{::'OPTIONAL' | i18n}}</label>
+            <br/>
+            <div class="row">
+                <div class="col-md-5 m-l m-b" ng-repeat="(o_field,o_filter) in optional_filter">
+                    <input ng-if="o_filter.type=='date'" type="text" placeholder="{{o_filter.text}}" class="form-control" ng-model="search[o_field]" ui-pikaday />
+                    <ui-select 
+                        ng-if="!o_filter.multi && o_filter.type && !{date:1}[o_filter.type]"
+                        ng-model="search[o_field]" ng-change="searchChange(optional_filter,o_field,search)" ng-disabled="disabled" >
+                        <ui-select-match placeholder="{{o_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                            <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                        </ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum(o_filter,search,o_field) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <ui-select 
+                        ng-if="o_filter.multi && o_filter.type && !{date:1}[o_filter.type]"
+                        ng-model="search[o_field]" ng-disabled="disabled" multiple>
+                        <ui-select-match placeholder="{{o_filter.text}}">{{ $item.value }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum(o_filter,search,o_field) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>{{::'SELECT_FILTER' | i18n}}</label>
+            <br/>
+            <div class="row">
+                <div class="col-md-10 m-l m-b" ng-repeat="(s_field,s_filter) in select_filter">
+                    <input ng-if="o_filter.type=='date'" type="text" placeholder="{{s_filter.text}}" class="form-control" ng-model="search[s_field]" ui-pikaday />
+                    <ui-select multiple ng-if="!s_filter.multi && s_filter.type && !{date:1}[s_filter.type]" ng-model="search[s_field]" ng-change="searchChange(select_filter,s_field,search)" ng-disabled="disabled" >
+                        <ui-select-match placeholder="{{s_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>
+                            {{ $item.value }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum(s_filter,search,s_field) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="preview()" ><strong>{{::'PREVIEW' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>
+
+<!--============== doc_improve ================-->
+
+<script type="text/ng-template" id="doc_improve.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group" ng-repeat="(field,_cfg) in list">
+              <label class="col-lg-2 control-label">{{::_cfg.text}}</label>
+              <div class="col-lg-10">
+                      <input ng-if="::!_cfg.type" type="text" class="form-control" ng-model="data[field]"
+                           ng-disabled="_cfg.ro" />
+
+                      <input ng-if="::_cfg.type=='number'" ng-init="::data[field]=+data[field]" type="number" class="form-control" 
+                           ng-model="data[field]" ng-disabled="_cfg.ro" />
+
+                      <input ng-if="::_cfg.type=='date'" type="text" ui-pikaday class="form-control" ng-model="data[field]" 
+                           ng-disabled="_cfg.ro" />
+
+                      <input ng-if="::_cfg.type=='time'" type="text" class="form-control" ng-model="data[field]" 
+                              ng-disabled="_cfg.ro"
+                              model-view-value="true" ui-options="timeMaskOpt" 
+                              ui-mask="{{data[field][0] == '2' ? '23:59' : '29:59'}}"  
+                              ui-mask-placeholder ui-mask-placeholder-char="__:__"/>
+
+                      <div ng-if="::_cfg.type=='filelist'" class="form-control no-border" >
+    <!--                       <input type="file" name="file" class="hidden" ui-file="{{_cfg.upload}}" path="{{field}}"/>
+                              <a class="small text-info" onclick="$(this).prev().click()"><em>{{::'UPLOAD' | i18n}}</em></a>&nbsp;
+                              <a class="small text-info" ng-if="data[field]" href="{{appConst.HOST+'/'+data[field]}}" target="_blank"><em>{{::'DOWNLOAD' | i18n}}</em></a> -->
+                              <input type="file" name="file" class="hidden" ui-file-list="{{_cfg.upload}}" path="{{field}}"/>
+                              <a class="small text-info" onclick="$(this).prev().click()"><em>{{::'UPLOAD' | i18n}}</em></a>&nbsp;
+                              <a class="small text-info" ng-if="data[field]" ng-click="trigger('下载文件',null,null,data)"><em>
+                                        {{::'DOWNLOAD' | i18n}}</em></a>
+                      </div>
+
+                      <ui-select 
+                          ng-if="::_cfg.type && !{number:1,date:1,time:1,filelist:1,img:1}[_cfg.type]"
+                          ng-model="data[field]"  ng-disabled="_cfg.ro" 
+                           >
+                          <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                          <ui-select-choices repeat="obj.key as (key,obj) in get_enum(_cfg,data) | filter: {value:$select.search}">
+                              <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                          </ui-select-choices>
+                      </ui-select>
+              </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+
+    </div>
+</script>
+
+
+<!--===============export_doc===================-->
+<script type="text/ng-template" id="export_doc.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group ">
+            <div class="row">
+              <div class="col-md-4 m-r m-b" ng-repeat="r_filter in required_filter">
+                <input ng-if="r_filter.type=='date'" type="text" placeholder="{{r_filter.text | i18n}}" style="width:100px;" class="form-control" ng-model="search[r_filter.field]" ui-pikaday />
+                <ui-select 
+                    ng-if="r_filter.type && !{date:1}[r_filter.type]"
+                    ng-model="search[r_filter.field]" ng-change="searchChange(required_filter,r_filter.field,search)" ng-disabled="disabled" >
+                    <ui-select-match placeholder="{{r_filter.text | i18n}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                        <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(r_filter,search,r_filter.field) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+              <div class="col-md-3 m-r m-b" ng-repeat="o_filter in optional_filter">
+                <input ng-if="o_filter.type=='date'" type="text" placeholder="{{o_filter.text | i18n}}" style="width:100px;" class="form-control" ng-model="search[o_filter.field]" ui-pikaday />
+                <ui-select 
+                    ng-if="o_filter.type && !{date:1}[o_filter.type]"
+                    ng-model="search[o_filter.field]" ng-change="searchChange(optional_filter,o_filter.field,search)" ng-disabled="disabled" >
+                    <ui-select-match placeholder="{{o_filter.text | i18n}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                        <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(o_filter,search,o_filter.field) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label col-md-offset-1>{{::'KEY_WORD' | i18n}}</label>
+            <br/>
+            <div class="input-group">
+                <span class="input-group-addon input-sm no-border no-bg dropdown" uib-dropdown>
+                    <a href class="dropdown-toggle" uib-dropdown-toggle>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight w" uib-dropdown-menu>
+                        <li ng-repeat="kword in key_word">
+                              <a ng-click="search.key_text=kword.text;search.key_field = kword.field;search.key_type =kword.type||''" href>{{kword.text | i18n}}</a>
+                        </li>
+                    </ul>
+                </span>
+                <input type="text" class="form-control input-sm no-border no-bg text-md"  ng-init = "search.key_text = key_word[0].text;search.key_field = key_word[0].field;search.key_type =key_word[0].type||'' " 
+                placeholder="{{search.key_text | i18n}}" ng-model="search.key_value">
+            </div>
+        </div>
+
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="preview()" ><strong>{{::'PREVIEW' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>
+
+<!--============== invoice_manage ================-->
+
+<script type="text/ng-template" id="invoice_manage.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form class="form-horizontal" ng-repeat="(key,value) in data">
+          <div class="form-group">
+              <label class="col-md-2 control-label">{{value[0] | i18n}}</label>
+              <div class="col-md-10">
+                  <input type="text" class="form-control" ng-model="value[1]" ui-pikaday ng-if="key=='invoice_date'" >
+                  <select ng-model="value[1]" class="form-control"
+                      ng-options="key as obj for (key,obj) in InvoiceEnum" ng-if="key=='invoice_state'" ng-disabled="value[2]">
+                  </select>
+                  <input type="text" class="form-control" ng-model="value[1]" ng-if="key!='invoice_date'&&key!='invoice_state'" ng-disabled="value[2]">
+              </div>
+          </div>
+        </form>
+        <div class="clearfix m-t-lg">
+            <button class="btn btn-sm btn-success pull-right" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>
+
+
+<!--===============invoice_history===================-->
+<script type="text/ng-template" id="invoice_history.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="panel panel-default" ng-repeat="block in ::cfg_blocks" ng-init="::_cfg=blocks[block]">
+            <div class="panel-heading font-bold" ng-init="show=true;icon='fa-minus'">
+                <a ng-click="show=!show;icon=show?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon"></i> {{::_cfg.text}}</a>
+            </div>
+            <div class="panel-body" ng-show="show">
+                  <div ui-grid="gridCfg[block]" class="bg-white" ng-style="{height:expand_height(gridCfg[block])}" ng-if = "::_cfg.list"
+                      ui-grid-selection
+                      ui-grid-edit
+                      ui-grid-cellNav
+                      ui-grid-resize-columns
+                      ui-grid-auto-resize
+                      ui-grid-pinning
+                      ui-grid-save-state>
+                  </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="choose_formula_type.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="tu-grid-label m-l">{{::'FORMULA_TYPE' | i18n}}<i class="{{expandCls[0]}}"></i>
+                </label>
+                <div class="clearfix">
+                    <span ng-repeat="(key,obj) in get_enum(data)" class="search-setting-item col-md-5">
+                        <input type="radio" value="{{key}}"  ng-model="data.formula_type"/>
+                        <label>{{obj}}</label>
+                    </span>
+                </div>
+            </div> 
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div> 
+</script>
+
+<!-- ===================write off attach picture==================== -->
+<script type="text/ng-template" id="write_off_attach_picture.html">
+<div modal-movable class="modal-body">
+    <div class="form-group row mb-0">
+        <div ng-repeat="picture in data['核销凭证'] track by $index"
+             class="col-md-3 invoice_img"
+             ng-class="{imgStyle:img_scale}"
+             ng-click="img_scale = !img_scale">
+            <img class="img-size" ng-src ="{{picture.path?(appConst.HOST+'/'+picture.path):'img/upload.png'}}" />
+        </div>
+    </div>
+</div>
+</script>
+
+
+<script type="text/ng-template" id="invoice_item_edit.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+
+        <form name="form" class="form-horizontal form-validation">
+              <div class="form_group">
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'INVOICE_TYPE'|i18n}}</label>
+                    <div class = "col-lg-6">
+                      <ui-select 
+                            ng-model="data.invoice_type" required>
+                            <ui-select-match>{{ $select.selected.value }}
+                                <a ng-click="$select.clear($event);data[field]='';" ng-if="_cfg.clear">&nbsp;X&nbsp;</a>
+                            </ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum('InvoiceType') | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'NAME'|i18n}}</label>
+                    <div class = "col-lg-6">
+                        <input type="text" class="form-control" ng-model="data.name"/>
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'FORMULA_TYPE'|i18n}}</label>
+                    <div class = "col-lg-6">
+                          <ui-select 
+                            ng-model="data.kk_calc_formula" multiple>
+                            <ui-select-match>{{ $item.value }}</ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum('FinFormula') | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'BUSSINESS_TYPE_EDITABLE'|i18n}}</label>
+                    <div class = "col-lg-6">
+                      <ui-select 
+                            ng-model="data.business_type_edit" required>
+                            <ui-select-match>{{ $select.selected.value }}
+                                <a ng-click="$select.clear($event);data[field]='';" ng-if="_cfg.clear">&nbsp;X&nbsp;</a>
+                            </ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum('YesNo') | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                  </div>
+                  <div class="row m-b" ng-if="data.invoice_type =='1'">
+                    <label class="col-lg-3 control-label">{{::'IS_E_INVOICE'|i18n}}</label>
+                    <div class = "col-lg-6">
+                      <ui-select 
+                            ng-model="data.e_invoice" >
+                            <ui-select-match>{{ $select.selected.value }}
+                                <a ng-click="$select.clear($event);data[field]='';" ng-if="_cfg.clear">&nbsp;X&nbsp;</a>
+                            </ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum('YesNo') | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                  </div>
+              </div>
+              <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right"  ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+              </div>
+        </form>
+
+    </div>
+</script>
+
+<!-- ===================ladder_formula==================== -->
+<script type="text/ng-template" id="ladder_formula.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form_group">
+                <div class="row m-b">
+                  <label class="col-md-3 text-left">{{::'NAME'|i18n}}</label>
+                  <input type="text" class="col-md-5" ng-model="data.name" required>
+                </div>
+                <div class="row m-b">
+                  <label class="col-md-3 text-left mb-0" style="padding-top: 3px;padding-bottom: 3px;">{{::'FORMULA'|i18n}}</label>
+                  <button type="button col-md-2" class="btn btn-info btn-sm h-26" ng-click="range_add()">添加行</button>
+    <!--               <span>
+                      <a class="fw-normal text-action itinerary-btn"  ng-click="range_add()">
+                        <i class="icon-plus text-md m-t-xxs" style="color: #53c368;"></i>
+                      </a>
+                  </span> -->
+                </div>
+                <div class="row m-b mx-0" ng-repeat = "item in data.range_arr">
+                    <input type="text" class="col-md-2" ng-model="item.begin" ui-validate=" '$value >= 0'" step='0.01'>
+                    <label class="col-md-3 text-center h-26">{{::'COMP_COND'|i18n}}</label>
+                    <input type="text" class="col-md-2" ng-model="item.end" ui-validate=" '$value >= 0'"
+                    step='0.01'>
+                    <label class="col-md-2 text-right h-26">{{::'FEE'|i18n}}</label>
+                    <input type="number" class="col-md-2" ng-model="item.fee" ui-validate=" '$value >= 0'" step='0.01'>
+                    <div class = "col-md-1">
+                        <a class="itinerary-btn" ng-click="range_delete($index)">
+                            <i class="icon-close text-md" style="color: #ff7070;display: block;line-height: 26px;"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="row mx-0">
+                    <input type="text" class="col-md-2" ng-model="data.upper" required 
+                    ui-validate=" '$value >= 0'" step='0.01'>
+                    <label class="col-md-3 text-center h-26">{{::'COMP_INC'|i18n}}</label>
+                    <input type="text" class="col-md-2" ng-model="data.scale" required
+                    ui-validate=" '$value >= 0'" step='0.01'>
+                    <label class="col-md-2 text-right h-26">{{::'FEE_INC'|i18n}}</label>
+                    <input type="number" class="col-md-2" ng-model="data.fee_scale" required
+                    ui-validate=" '$value >= 0'" step='0.01'>
+                </div>
+            </div>
+            
+            <div class="clearfix m-t-lg">
+                <button class="btn btn-sm btn-success pull-right"  ng-click="submit()" ng-disabled="form.$invalid">
+                <strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="settle_way_edit.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+
+        <form name="form" class="form-horizontal form-validation">
+              <div class="form_group">
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'NAME'|i18n}}</label>
+                    <div class = "col-lg-6">
+                        <input type="text" class="form-control" ng-model="data.name" required/>
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'IS_NON_ACCOUNT'|i18n}}</label>
+                    <div class="col-lg-6">
+                      <ui-select 
+                            ng-model="data.is_non_account" required>
+                            <ui-select-match>{{ $select.selected.value }}
+                                <a ng-click="$select.clear($event);data[field]='';" ng-if="_cfg.clear">&nbsp;X&nbsp;</a>
+                            </ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum('YesNo') | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'IS_REMITTANCE_RQ'|i18n}}</label>
+                    <div class="col-lg-6">
+                      <ui-select 
+                            ng-model="data.is_remittance_rq" required>
+                            <ui-select-match>{{ $select.selected.value }}
+                                <a ng-click="$select.clear($event);data[field]='';" ng-if="_cfg.clear">&nbsp;X&nbsp;</a>
+                            </ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum('YesNo') | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'COUNTRY_CITY_REQ'|i18n}}</label>
+                    <div class="col-lg-6">
+                      <ui-select ng-model="data.country_city_req" required>
+                            <ui-select-match>{{ $select.selected.value }}
+                                <a ng-click="$select.clear($event);data[field]='';" ng-if="_cfg.clear">&nbsp;X&nbsp;</a>
+                            </ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum('YesNo') | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                  </div>
+                  <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'FORMULA_TYPE'|i18n}}</label>
+                    <div class = "col-lg-6">
+                          <ui-select
+                            ng-model="data.kk_calc_formula" multiple>
+                            <ui-select-match>{{ $item.value }}</ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum('FinFormula') | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                  </div>
+              </div>
+              <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right"  ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+              </div>
+        </form>
+
+    </div>
+</script>
+<script type="text/ng-template" id="settle_way_bind.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+
+        <form name="form" class="form-horizontal form-validation">
+                <div class="row m-b">
+                    <label class="col-lg-3 control-label">{{::'APPLICABLE_CURRENCY'|i18n}}</label>
+                    <div class = "col-lg-6">
+                        <ui-select multiple required
+                                   ng-model="data.multi_selected"  ng-disabled="disabled" >
+                            <ui-select-match>{{ $item.value }}</ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:data.multi_type,edit_path:data.multi_edit_path},row) | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right"  ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+
+    </div>
+</script>
+<!--============== statistics ================-->
+<script type="text/ng-template" id="statistics.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="row">
+            <div class="col-md-6 pb-16" ng-repeat="item in items">
+                <img class="icon_fin" ng-src="{{item.img}}" alt="">{{item.name}}：{{item.num}}              
+            </div>
+        </div>
+    </div>
+</script>
+
+<!--============== doc_related_msg ================-->
+<script type="text/ng-template" id="doc_related_msg.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="row" ng-repeat="item in data.related_msg">
+            <div class="col-md-6 pb-16" >
+                <span ng-if = "!item.type">{{item.text|i18n}}：{{data[item.field]?data[item.field]:''}}</span>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+
+<!--===============export_approve===================-->
+<script type="text/ng-template" id="export_approve.html">
+     <div modal-movable class="tu-modal-head">
+        <h3 class="text-center tu-modal-title">{{::text}}</h3>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group ">
+            <label>{{::'REQUIRED' | i18n}}</label>
+            <br/>
+            <div class="row">
+              <div class="col-md-5 m-l" ng-repeat="(r_field,r_filter) in required_filter">
+                <input ng-if="r_filter.type=='date'" type="text" placeholder="{{r_filter.text}}" class="form-control" ng-model="search[r_field]" ui-pikaday />
+                <ui-select 
+                    ng-if="r_filter.type && !{date:1}[r_filter.type]"
+                    ng-model="search[r_field]" ng-change="searchChange(required_filter,r_field,search)" ng-disabled="disabled" >
+                    <ui-select-match placeholder="{{r_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                        <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                    </ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(r_filter,search,r_field) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{{::'OPTIONAL' | i18n}}</label>
+            <br/>
+            <div class="row">
+                <div class="col-md-5 m-l m-b" ng-repeat="(o_field,o_filter) in optional_filter">
+                    <input ng-if="o_filter.type=='date'" type="text" placeholder="{{o_filter.text}}" class="form-control" ng-model="search[o_field]" ui-pikaday />
+                    <ui-select 
+                        ng-if="!o_filter.multi && o_filter.type && !{date:1}[o_filter.type]"
+                        ng-model="search[o_field]" ng-change="searchChange(optional_filter,o_field,search)" ng-disabled="disabled" >
+                        <ui-select-match placeholder="{{o_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>{{ $select.selected.value }}
+                            <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                        </ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum(o_filter,search,o_field) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <ui-select 
+                        ng-if="o_filter.multi && o_filter.type && !{date:1}[o_filter.type]"
+                        ng-model="search[o_field]" ng-disabled="disabled" multiple>
+                        <ui-select-match placeholder="{{o_filter.text}}">{{ $item.value }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum(o_filter,search,o_field) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>{{::'SELECT_FILTER' | i18n}}</label>
+            <br/>
+            <div class="row">
+                <div class="col-md-10 m-l m-b" ng-repeat="(s_field,s_filter) in select_filter">
+                    <input ng-if="o_filter.type=='date'" type="text" placeholder="{{s_filter.text}}" class="form-control" ng-model="search[s_field]" ui-pikaday />
+                    <ui-select multiple ng-if="!s_filter.multi && s_filter.type && !{date:1}[s_filter.type]" ng-model="search[s_field]" ng-change="searchChange(select_filter,s_field,search)" ng-disabled="disabled" >
+                        <ui-select-match placeholder="{{s_filter.text}}"+'&nbsp;&nbsp;&nbsp;&nbsp;'>
+                            {{ $item.value }}
+                        </ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum(s_filter,search,s_field) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+
+    </div>
+</script>

@@ -1,0 +1,1544 @@
+<script type="text/ng-template" id="CommonCheckbox.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="row">
+            <label class="col-md-6" ng-repeat="item in data">
+            <input type="checkbox" value="{{item.id}}" ng-checked="ids.indexOf(item.id)!==-1" ng-click="toggleCheckbox(item.id,ids)">
+            {{item.name}}
+            </label>
+        </div>
+        <div class="clearfix m-t-lg">
+            <button class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+
+<!--============== product_picture ================-->
+<script type="text/ng-template" id="product_picture.html">
+    <img style="max-height: 100px;max-width:200px;border:5px solid;"
+        ng-style="{color:data.picture_selected==$index?'#fad733':'white'}"
+        ng-repeat="picture in data['产品图片'] track by $index"
+        ng-src ="{{cvtPath(picture.thumbnail)}}"
+        ng-click = 'data.picture_selected=$index'/>
+</script>
+
+<!--============== product_feature ================-->
+<script type="text/ng-template" id="product_feature.html">
+<textarea ui-auto-textarea ng-model="data['产品特色']" 
+     class="form-control" style="overflow: hidden;" 
+     ng-disabled = "::(cfg.ro[cfg.block.indexOf('产品特色')]==1)">
+</textarea>
+<!-- <div id="pdfCt">
+  <button ng-click="PdfSrvc.prePage()">上一页</button>
+  <button ng-click="PdfSrvc.nextPage()">下一页</button>
+  <button ng-click="PdfSrvc.zoomIn()">放大</button>
+  <button ng-click="PdfSrvc.zoomOut()">缩小</button>
+</div>
+<div style="overflow:scrol">
+    <canvas id="pdfCanvas"></canvas>
+</div> -->
+</script>
+
+<!--============== product_fee_include ================-->
+<script type="text/ng-template" id="product_fee_include.html">
+<textarea ui-auto-textarea ng-model="data['费用包含']" 
+     class="form-control" style="overflow: hidden;" 
+     ng-disabled = "::(cfg.ro[cfg.block.indexOf('费用包含')]==1)">
+</textarea>
+</script>
+
+<!--============== product_fee_exclude ================-->
+<script type="text/ng-template" id="product_fee_exclude.html">
+<textarea ui-auto-textarea ng-model="data['费用不含']" 
+     class="form-control" style="overflow: hidden;" 
+     ng-disabled = "::(cfg.ro[cfg.block.indexOf('费用不含')]==1)">
+</textarea>
+</script>
+
+<!--============== product_service_description ================-->
+<script type="text/ng-template" id="product_service_description.html">
+<textarea ui-auto-textarea ng-model="data['服务说明']" 
+     class="form-control" style="overflow: hidden;" 
+     ng-disabled = "::(cfg.ro[cfg.block.indexOf('服务说明')]==1)">
+</textarea>
+</script>
+
+<!--============== product_visa ================-->
+<script type="text/ng-template" id="product_visa.html">
+<textarea ui-auto-textarea ng-model="data['签证所需材料']" 
+     class="form-control" style="overflow: hidden;" 
+     ng-disabled = "::(cfg.ro[cfg.block.indexOf('签证所需材料')]==1)">
+</textarea>
+</script>
+
+<!--============== product_tips ================-->
+<script type="text/ng-template" id="product_tips.html">
+<textarea ui-auto-textarea ng-model="data['温馨提示']" 
+     class="form-control" style="overflow: hidden;" 
+     ng-disabled = "::(cfg.ro[cfg.block.indexOf('温馨提示')]==1)">
+</textarea>
+</script>
+
+<!--============== product_booking_notes ================-->
+<script type="text/ng-template" id="product_booking_notes.html">
+<textarea ui-auto-textarea ng-model="data['预定须知']" 
+     class="form-control" style="overflow: hidden;" 
+     ng-disabled = "::(cfg.ro[cfg.block.indexOf('预定须知')]==1)">
+</textarea>
+</script>
+
+<!--============== product_itinerary ================-->
+<script type="text/ng-template" id="product_itinerary.html">
+    <div class="panel panel-default">
+        <div class="panel-heading" ng-init="show_h=true;icon_h='fa-minus';" >
+            <ul ui-sortable ng-model="data['行程详情']" class="list-group gutter list-group-lg list-group-sp" 
+                ng-show='show_h'>
+                <li class="list-group-item" ng-repeat="itinerary in data['行程详情']">
+                    <div class="col-md-10 sort-handle text-bold tripDate" uib-tooltip="请按住鼠标左键进行拖拽" tooltip-append-to-body="true">
+                        <i class="fa fa-calendar" style="margin-right: 10px;"></i>
+                        <span>{{get_label_name($index + 1)}}</span>
+                    </div>
+                    <div class="col-md-2 text-right" style="float: right;">
+                        <a class="itinerary-btn" ng-click="itinerary_delete($index)" ng-if="::!(cfg.ro[cfg.block.indexOf('行程详情')]==1)" style="margin-right: 10px;">
+                            <i class="icon-close text-md m-t-xxs" style="color: #ff7070;"></i>
+                        </a>
+                        <a class="fw-normal text-action itinerary-btn" ng-click="itinerary_add()" ng-if="::!(cfg.ro[cfg.block.indexOf('行程详情')]==1)" style="margin-right: 10px;">
+                            <i class="icon-plus text-md m-t-xxs" style="color: #53c368;"></i>
+                        </a>
+                        <a class="fw-normal text-action itinerary-btn" ng-click="itinerary_copy($index)" ng-if="::!(cfg.ro[cfg.block.indexOf('行程详情')]==1)">
+                            <i class="fa fa-files-o text-md m-t-xxs" style="color: #53c368;"></i>
+                        </a>
+                    </div>
+                    <form class="col-md-12 form-horizontal" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label">{{::'标题' | i18n}}</label>
+                            <div class="col-md-11">
+                                <input type="text" class="form-control input-sm" ng-model="itinerary.title" ng-disabled="::(cfg.ro[cfg.block.indexOf('行程详情')]==1)" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label">{{'行程详情' | i18n}}</label>
+                            <div class="col-md-11">
+                                <textarea rows="5" ng-model="itinerary.description" class="form-control" ng-disabled="::(cfg.ro[cfg.block.indexOf('行程详情')]==1)"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label">{{'用餐情况' | i18n}}</label>
+                            <div class="col-md-11">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value="option1" ng-model="itinerary.breakfast" ng-disabled="::(cfg.ro[cfg.block.indexOf('行程详情')]==1)" /> {{'早餐' | i18n}}
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value="option2" ng-model="itinerary.lunch" ng-disabled="::(cfg.ro[cfg.block.indexOf('行程详情')]==1)" /> {{'午餐' | i18n}}
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value="option3" ng-model="itinerary.dinner" ng-disabled="::(cfg.ro[cfg.block.indexOf('行程详情')]==1)"/> {{'晚餐' | i18n}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label" ng-disabled="::!(cfg.ro[cfg.block.indexOf(base_blk)]==1)">{{'酒店住宿' | i18n}}</label>
+                            <div class="col-md-11">
+                                <input type="text" class="form-control input-sm" ng-model="itinerary.accommodation" ng-disabled="::(cfg.ro[cfg.block.indexOf('行程详情')]==1)" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label">{{'交通信息' | i18n}}</label>
+                            <div class="col-md-11">
+                                <input type="text" class="form-control input-sm" ng-model="itinerary.traffic_comment" ng-disabled="::(cfg.ro[cfg.block.indexOf('行程详情')]==1)" />
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="product_submit.html">
+
+    <div class="row text-center">
+        <a class="btn btn-large btn-default" ng-click="product_route()"><i class="icon-plus"> </i>上传产品行程</a>
+        <hr>
+    </div>
+    <div id="pdfCt">
+        <button ng-click="PdfSrvc.prePage()"><i class="fa fa-arrow-circle-left" title="上一页"></i></button>
+        <button ng-click="PdfSrvc.nextPage()"><i class="fa fa-arrow-circle-right" title="下一页"></i></button>
+
+        <button ng-click="PdfSrvc.zoomOut()"><i class="fa fa-search-minus" title="缩小"></i></button>
+        <button ng-click="PdfSrvc.zoomIn()"><i class="fa fa-search-plus" title="放大"></i></button>
+
+        <button ng-click="download()"><i class="fa fa-download" title="下载"></i></button>
+    </div>
+    <div style="overflow:auto" class="text-center">
+        <canvas id="pdfCanvas"></canvas>
+    </div>
+    <div id="pdfCt">
+        <button ng-click="PdfSrvc.prePage()"><i class="fa fa-arrow-circle-left" title="上一页"></i></button>
+        <button ng-click="PdfSrvc.nextPage()"><i class="fa fa-arrow-circle-right" title="下一页"></i></button>
+
+        <button ng-click="PdfSrvc.zoomOut()"><i class="fa fa-search-minus" title="缩小"></i></button>
+        <button ng-click="PdfSrvc.zoomIn()"><i class="fa fa-search-plus" title="放大"></i></button>
+
+        <button ng-click="download()"><i class="fa fa-download" title="下载"></i></button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="product_see.html">
+    <div id="pdfCt">
+        <button ng-click="PdfSrvc.prePage()"><i class="fa fa-arrow-circle-left" title="上一页"></i></button>
+        <button ng-click="PdfSrvc.nextPage()"><i class="fa fa-arrow-circle-right" title="下一页"></i></button>
+
+        <button ng-click="PdfSrvc.zoomOut()"><i class="fa fa-search-minus" title="缩小"></i></button>
+        <button ng-click="PdfSrvc.zoomIn()"><i class="fa fa-search-plus" title="放大"></i></button>
+
+        <button ng-click="download()"><i class="fa fa-download" title="下载"></i></button>
+    </div>
+    <div style="overflow:auto" class="text-center">
+        <canvas id="pdfCanvas"></canvas>
+    </div>
+</script>
+
+<!--============== select_date ================-->
+<script type="text/ng-template" id="select_date.html">
+    <div style="text-align: center;position: relative;" ng-init="page = 0">
+        <a ng-click="page = page-1">
+            <i class="glyphicon glyphicon-chevron-left" style="position: absolute;left:10px;top:50%;width:20px;height:20px"></i>
+        </a>
+        <a ng-click="page = page+1">
+            <i class="glyphicon glyphicon-chevron-right" style="position: absolute;right:10px;top:50%;width:20px;height:20px"></i>
+        </a>
+        <div style="display: inline-block;" ng-repeat="i in ::[0,1,2,3,4,5,6,7,8,9,10,11]" ng-model="vm[i]" seq="{{::i}}" page="{{page}}" ui-datepicker></div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="daliy_leave.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                  <div class="m-b row">
+                      <label class="col-md-3 col-md-offset-1" >{{'START_DATE' | i18n}}：</label>
+                      <input class="col-md-5" type="text" ng-model="data.start_date" ui-pikaday />
+                  </div>
+                  <div class="m-b row">
+                      <label class="col-md-3 col-md-offset-1" >{{'END_DATE' | i18n}}：</label>
+                      <input class="col-md-5" type="text" ng-model="data.end_date" ui-pikaday />
+                  </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="weekly_leave.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                  <div class="m-b row">
+                      <label class="col-md-2" >{{'START_DATE' | i18n}}：</label>
+                      <input class="col-md-3" type="text" ng-model="data.start_date" ui-pikaday />
+                      <label class="col-md-2" >{{'END_DATE' | i18n}}：</label>
+                      <input class="col-md-3" type="text" ng-model="data.end_date" ui-pikaday />
+                  </div>
+                  <div class="m-b row wrapper">
+                      <span ng-repeat ="(key,name) in get_enum('Week')">
+                          <input type="checkbox" value="{{key}}" ng-checked="data.days.indexOf(key)!==-1" ng-click="toggleCheckbox(key,data.days)" style="margin: 5px;">
+                          {{name}}
+                      </span>
+                  </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== choose product template type================-->
+<script type="text/ng-template" id="add_group_period.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::'GROUP_TYPE' | i18n}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group-period">
+                <div class="clearfix">
+                    <span ng-repeat="(key,value) in get_enum(data)" class="search-setting-item row">
+                        <input type="radio" value="{{key}}"  ng-model="data.pd_group_type" class="col-md-1" />
+                        <label>{{value}}</label>
+                    </span>
+                </div>
+            </div> 
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div> 
+</script>
+<!--============== ticket_transfer ================-->
+<script type="text/ng-template" id="ticket_transfer.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'TRAN_NUM' | i18n}}</label>
+                <div class="col-lg-10">
+                    <input type="number" class="form-control" ng-model="data.transfer_num" ui-validate=" '$value > 0 && $value <= data.seat_left' " required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'TRAN_GRP' | i18n}}</label>
+                <div class="col-lg-10">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="data.group_num" readonly required />
+                        <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="trigger('选择管控团队')">{{::'SEL' | i18n}}</button>
+                  </span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== group_price ================-->
+<script type="text/ng-template" id="group_price.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group" ng-repeat="price_type in data">
+                <label class="col-md-3">{{price_type.name}}</label>
+                <input type="number" class="col-md-6" ng-model="price_type.value" required/>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== group_modify ================-->
+<script type="text/ng-template" id="group_modify.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form class="form-horizontal" name="modify_form">
+            <div class="form-group" ng-repeat="(key,value) in data.items">
+                <label class="col-md-2 control-label">{{value[0] | i18n}}</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" ng-disabled="true" ng-if="key=='product_id'" value="P0{{value[1]}}">
+                    <input type="text" class="form-control" ng-disabled="true" value="{{value[1]}}" ng-if="key!='product_id'">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" ng-model="data[key]" ui-pikaday ng-if="key=='dep_date'||key=='back_date'" required>
+                    <input type="text" class="form-control" ng-model="data[key]" ng-if="key=='sale_comment'">
+                    <input type="number" class="form-control" ng-model="data[key]" ng-if="key!='dep_date'&& key!='back_date'&&key!='product_id'&&key!='sale_comment'" required>
+                    <input type="text" class="form-control" value="P0{{data[key]}}" ng-if="key=='product_id'" readonly="readonly">
+                </div>
+                <div class="col-md-3" ng-if="key=='product_id'">
+                    <button class="btn btn-default" type="button" ng-click="select_product()">{{::'SEL' | i18n}}</button>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button class="btn btn-sm btn-success pull-right" ng-click="submit()" ng-disabled="modify_form.$invalid"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== group_fee_modify ================-->
+<script type="text/ng-template" id="group_fee_modify.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <div class="row m-l m-r m-t" ng-repeat="(key,value) in data.items">
+                    <label class="col-md-2 control-label">{{key}}</label>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" ng-disabled="true" ng-model="value">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" ng-model="data[key]" ui-validate=" '$value > 0'" step='{{step}}'>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== order_change ================-->
+<script type="text/ng-template" id="order_change.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group col-md-3" ng-repeat="(key,obj) in get_enum(data.enum)">
+                <span>
+                  <input type="radio"  value="{{key}}" ng-model="data.change_type"/>
+                  <label>{{obj}}</label>
+              </span>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== order_history ================-->
+<script type="text/ng-template" id="order_history.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="panel panel-default" ng-repeat="block in repeat_block track by $index" ng-init="::_cfg=blocks[block];p_index = $index;">
+            <div class="panel-heading font-bold">
+                {{::text}}{{$index+1}}
+                <a class="fw-normal m-l-lg btn btn-xs btn-default" ng-repeat="(act, __cfg) in ::_cfg.action" ng-click="trigger(act,__cfg,block+p_index)">
+             {{::__cfg.text}}
+          </a>
+            </div>
+      <div ui-grid="gridCfg[block+$index]" class="bg-white" ng-style="{height:expand_height(gridCfg[block+$index])}"
+        ui-grid-edit
+        ui-grid-cellNav
+        ui-grid-resize-columns
+        ui-grid-auto-resize
+        ui-grid-pinning
+        ui-grid-save-state>
+            </div>
+            <div class="m-b"></div>
+        </div>
+    </div>
+</script>
+<!--============== reta_account ================-->
+<script type="text/ng-template" id="reta_account.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'LOGIN' | i18n}}</label>
+                <div class="col-lg-10">
+                    <label class="i-switch m-t-xs m-r">
+                        <input type="checkbox" ng-model="data.state" ng-true-value="'1'" ng-false-value="'0'">
+                        <i></i>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'LOGIN_NAME' | i18n}}</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="data.name" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'ACCOUNT' | i18n}}</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="data.account" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'PASSWORD' | i18n}}</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="data.password" />
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== supp_account ================-->
+<script type="text/ng-template" id="supp_account.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'LOGIN' | i18n}}</label>
+                <div class="col-lg-10">
+                    <label class="i-switch m-t-xs m-r">
+                        <input type="checkbox" ng-model="data.state" ng-true-value="'1'" ng-false-value="'0'">
+                        <i></i>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'SEE_SELF_LMT' | i18n}}</label>
+                <div class="col-lg-10">
+                    <label class="i-switch m-t-xs m-r">
+                        <input type="checkbox" ng-model="data.auth" ng-true-value="'1'" ng-false-value="'0'">
+                        <i></i>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'ACCOUNT' | i18n}}</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" ng-model="data.account" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'RESET_PASSWORD' | i18n}}</label>
+                <div class="col-lg-10">
+                    <label class="i-switch m-t-xs m-r">
+                        <input type="checkbox" ng-model="data.reset_state" ng-true-value="'1'" ng-false-value="'0'">
+                        <i></i>
+                    </label>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== group_deadline ================-->
+<script type="text/ng-template" id="group_deadline.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="col-md-3">{{::'CLOSE_DATE'| i18n}}</label>
+                <!-- <div ng-include="'DateEdit.html'"></div> -->
+                <input class="col-md-8" type="number" ng-model="data.day" />
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== group_info_tab ================-->
+<script type="text/ng-template" id="group_info_tab.html">
+    <div class="m-b">
+        <button type="submit" class="btn btn-xs btn-default m-r" ng-disabled="form.$invalid" ng-click="value()" ng-repeat="(key,value) in  tab_map"><strong>{{key| i18n}}</strong>
+        </button>
+    </div>
+</script>
+<!--============== dynamic_block_pair ================-->
+<script type="text/ng-template" id="dynamic_block_pair.html">
+    <div class="wrapper-md">
+        <div class="panel panel-default" ng-repeat="block_pair in dynamic_block_pair track by $index" style="padding-bottom: 5px;">
+            <div class="panel-heading font-bold">
+                {{::text}}{{$index+1}}
+            </div>
+            <div ng-repeat="block in block_pair" class="row m">
+                <div class="wrapper-xs">{{blocks[block].text}}</div>
+                <div>
+              <div ui-grid="gridCfg[block+$parent.$index]" class="bg-white" ng-style="{height:expand_height(gridCfg[block+$parent.$index])}"
+                  ui-grid-selection
+                  ui-grid-edit
+                  ui-grid-cellNav
+                  ui-grid-resize-columns
+                  ui-grid-auto-resize
+                  ui-grid-pinning
+                  ui-grid-save-state>
+                    </div>
+                </div>
+            </div>
+            <div class="m-b"></div>
+        </div>
+    </div>
+</script>
+<!-- ==============assign_auth=========== -->
+<script type="text/ng-template" id="assign_auth.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="m-b">{{data.single_text}}</label>
+            <ui-select required
+                ng-model="data.single_selected"  ng-disabled="disabled"  >
+                    <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:data.single_type,edit_path:data.single_edit_path}) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group">
+                <div class = "input-group m-b">
+                    <label>{{data.multi_text}}</label>
+                    <span class="input-group-btn">
+                        <a class="fw-normal m-l-lg btn btn-xs btn-default" type="button" ng-click="trigger('选择员工-分配权限')">{{::'SEL' | i18n}}</a>
+                    </span>
+                </div>
+                <ui-select multiple required
+                ng-model="data.multi_selected"  ng-disabled="disabled" >
+                    <ui-select-match>{{ $item.value }}</ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:data.multi_type,edit_path:data.multi_edit_path},row) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!-- ==============order_appoint=========== -->
+<script type="text/ng-template" id="order_appoint.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-validation">
+            <div class="form-group ">
+                <div class="form-group row">
+                    <div ng-repeat="(key,value) in data.fields">
+                        <label class="col-md-2">{{key|i18n}}</label>
+                <ui-select required 
+                    ng-model="data.fields[key]"  ng-disabled="disabled"  class = "col-md-3">
+                            <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum(data.enum) | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!-- ===================leader_require==================== -->
+<script type="text/ng-template" id="leader_require.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <div class="clearfix">
+                    <span ng-repeat="(key,value) in get_enum('LeaderRequire')" class="search-setting-item col-md-3">
+                    <input type="radio" value="{{key}}"  ng-model="data.leader_require"/>
+                    <label>{{value}}</label>
+                </span>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix m-t-lg">
+            <button class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+<!-- ===================choose_leader==================== -->
+<script type="text/ng-template" id="choose_leader.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="panel-body" ng-init="::_cfg=blocks[block]">
+            <div ui-grid="gridCfg[block]" class="bg-white m-b" ng-style="{height:expand_height(gridCfg[block])}"
+               ui-grid-edit
+               ui-grid-cellNav
+               ui-grid-resize-columns
+               ui-grid-auto-resize
+               ui-grid-pinning
+               ui-grid-save-state>
+            </div>
+        </div>
+        <div class="clearfix m-t-lg">
+            <button class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+<!-- ==============share========== -->
+<script type="text/ng-template" id="share.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group row">
+            <div class="col-md-11">
+                <input class="col-md-1" type="radio" value="1" ng-model="data.isShare" />
+                <label class="col-md-2">{{'SHARE' | i18n}}</label>
+                <input class="col-md-1" type="radio" value="0" ng-model="data.isShare" />
+                <label class="col-md-2">{{'NOSHARE' | i18n}}</label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label>{{'SHARE_MAN' | i18n}}</label>
+            <div class="col-md-5">
+            <select ng-model="data.share_employee" class="form-control" ng-disabled="data.isShare == 0"
+                  ng-options="key as obj for (key,obj) in get_enum('Employee')" >
+                </select>
+            </div>
+        </div>
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+<!--============== announce_see ================-->
+<script type="text/ng-template" id="announce_see.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{data.title}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <p class="text-center">{{::'ANNOUNCE_COMPANY'|i18n}}&nbsp;:&nbsp;{{data.company_name}}&nbsp;:&nbsp;{{::'ANNOUNCE_DEPARTMENT'|i18n}}
+          &nbsp;:&nbsp;{{data.department_name}}&nbsp;:&nbsp;{{::'ANNOUNCE_EMPLOYEE'|i18n}}&nbsp;:&nbsp;{{data.employee_name}}</p>
+        <div>
+            <span ng-bind-html="data.body"></span>
+        </div>
+    </div>
+</script>
+<!--============== new_see ================-->
+<script type="text/ng-template" id="new_see.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{data.title}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <p class="text-center">{{::'ANNOUNCE_COMPANY'|i18n}}&nbsp;:&nbsp;{{data.company_name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{::'ANNOUNCE_DEPARTMENT'|i18n}}
+          &nbsp;:&nbsp;{{data.department_name}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{::'ANNOUNCE_EMPLOYEE'|i18n}}&nbsp;:&nbsp;{{data.employee_name}}</p>
+        <div>
+            <span ng-bind-html="data.body"></span>
+        </div>
+    </div>
+</script>
+<!--============== group_specify ================-->
+<script type="text/ng-template" id="group_specify.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+            <ui-select multiple
+                ng-model="data.selected"  ng-disabled="disabled" >
+                    <ui-select-match>{{ $item.value }}</ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(data,row) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== order_time_limit ================-->
+<script type="text/ng-template" id="time_limit.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group row">
+                <label class="col-md-6">
+                    <input type="radio" ng-model='data.limit_type' class="col-md-2" value="1">
+                    <label class="col-md-6">{{'RESERVE_TIMER' | i18n}}</label>
+                </label>
+                <label class="col-md-6">
+                    <input type="radio" ng-model='data.limit_type' class="col-md-2" value="2">
+                    <label class="col-md-6">{{'PAY_TIMER' | i18n}}</label>
+                </label>
+            </div>
+            <div class="clearfix m-t-lg row">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="submit()" ng-disabled="form.$invalid"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!-- 占位时限 -->
+<script type="text/ng-template" id="order_reserve.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group row">
+            <label class="col-lg-3 " style="text-align:right;">{{::'CUR_RESERVE' | i18n}}</label>
+            <div class="col-lg-5">
+                <input class="form-control" type="text" ng-model="data.timer_end_date" ng-disabled="true" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-lg-3 " style="text-align:right;">{{::'NEW_RESERVE' | i18n}}</label>
+            <div class="col-lg-5">
+                <div class="col-lg-6 no-padder">
+                    <input class="form-control" type="text" ng-model="data.date" ui-pikaday />
+                </div>
+                <div class="col-lg-5 col-lg-offset-1 no-padder">
+              <input class="form-control" type="text" model-view-value="true" 
+              ng-model="data.time" 
+              ui-options="timeMaskOpt"
+              ui-mask="29:59"  
+              ui-mask-placeholder ui-mask-placeholder-char="__:__" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-lg-3 " style="text-align:right;">{{::'NOTICE_RESERVE' | i18n}}</label>
+        </div>
+        <div class="form-group row" ng-repeat="notice_time in data.timer_notice_list track by $index">
+            <label class="col-lg-3 " style="text-align:right;">{{$index+1}}</label>
+            <div class="col-lg-5">
+                <div class="col-lg-6 no-padder">
+                    <input class="form-control" type="text" ng-model="notice_time.date" ui-pikaday />
+                </div>
+                <div class="col-lg-5 col-lg-offset-1 no-padder">
+            <input class="form-control" type="text" model-view-value="true" 
+            ng-model="notice_time.time" 
+            ui-options="timeMaskOpt"
+            ui-mask="29:59"  
+            ui-mask-placeholder ui-mask-placeholder-char="__:__" />
+                </div>
+            </div>
+        </div>
+        <div class="clearfix m-t-lg row">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+    </div>
+</script>
+<!-- 付款时限 -->
+<script type="text/ng-template" id="order_pay_reserve.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group row">
+            <label class="col-lg-3 " style="text-align:right;">{{::'CUR_RESERVE' | i18n}}</label>
+            <div class="col-lg-8">
+                <input class="form-control" type="text" ng-model="data.pay_timer_end_date" ng-disabled="true" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-lg-3 " style="text-align:right;">{{::'NEW_RESERVE' | i18n}}</label>
+            <div class="col-lg-8">
+                <div class="col-lg-4 no-padder">
+                    <input class="form-control" type="text" ng-model="data.date" ui-pikaday />
+                </div>
+                <div class="col-lg-2 col-lg-offset-1 no-padder">
+              <input class="form-control" type="text" model-view-value="true" 
+              ng-model="data.time" 
+              ui-options="timeMaskOpt"
+              ui-mask="29:59"  
+              ui-mask-placeholder ui-mask-placeholder-char="__:__" />
+                </div>
+                <div class="col-lg-4 col-lg-offset-1 no-padder">
+                    <input class="form-control" type="number" step="0.01" ng-model='data.pay_amount_limit' placeholder="{{::'PAY_AMOUNT_LIMIT'|i18n}}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-lg-3 " style="text-align:right;">{{::'NOTICE_RESERVE' | i18n}}</label>
+        </div>
+        <div class="form-group row" ng-repeat="notice_time in data.pay_timer_notice_list track by $index">
+            <label class="col-lg-3 " style="text-align:right;">{{$index+1}}</label>
+            <div class="col-lg-8">
+                <div class="col-lg-6 no-padder">
+                    <input class="form-control" type="text" ng-model="notice_time.date" ui-pikaday />
+                </div>
+                <div class="col-lg-5 col-lg-offset-1 no-padder">
+            <input class="form-control" type="text" model-view-value="true" 
+            ng-model="notice_time.time" 
+            ui-options="timeMaskOpt"
+            ui-mask="29:59"  
+            ui-mask-placeholder ui-mask-placeholder-char="__:__" />
+                </div>
+            </div>
+        </div>
+        <div class="clearfix m-t-lg row">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+    </div>
+</script>
+<!--===============choose_sup_account===================-->
+<script type="text/ng-template" id="choose_sup_account.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="panel panel-default" ng-init="::_cfg=blocks[block]" ng-if="blocks[block]">
+            <div class="panel-heading font-bold" ng-init="show_h=true;icon_h='fa-minus'">
+                <a ng-click="show_h=!show_h;icon_h=show_h?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon_h"></i> {{::_cfg.text}}</a>
+            </div>
+            <div class="panel-body" ng-show="show_h">
+          <div ui-grid="gridCfg[block]" class="bg-white m-b" ng-style="{height:expand_height(gridCfg[block])}"
+                  ui-grid-cellNav
+                  ui-grid-resize-columns
+                  ui-grid-auto-resize
+                  ui-grid-pinning
+                  ui-grid-save-state
+                  ui-grid-selection
+                  >
+                </div>
+            </div>
+        </div>
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+<!-- ==============order_jump_queue=========== -->
+<script type="text/ng-template" id="order_jump_queue.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="col-md-3">{{'GIVE_WAY_ORDER'| i18n}}</label>
+            <ui-select required class="col-md-6 no-padder"
+                ng-model="data.replace_id" >
+                    <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in data.order_ids | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3">{{'REPLACE_NUMBER'|i18n}}</label>
+                <input type="number" step="1" class="col-md-6" ng-model="data.replace_number" ui-validate=" '$value >0&& $value%1 === 0'" required/>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--===============order_comment===================-->
+<script type="text/ng-template" id="order_comment.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="panel panel-default" ng-init="::_cfg=blocks[history]" ng-if="blocks[history]">
+            <div class="panel-heading font-bold" ng-init="show_h=true;icon_h='fa-minus'">
+                <a ng-click="show_h=!show_h;icon_h=show_h?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon_h"></i> {{::_cfg.text}}</a>
+            </div>
+            <div class="panel-body" ng-show="show_h">
+          <div ui-grid="gridCfg[history]" class="bg-white m-b" ng-style="{height:expand_height(gridCfg[history])}"
+                  ui-grid-cellNav
+                  ui-grid-resize-columns
+                  ui-grid-auto-resize
+                  ui-grid-pinning
+                  ui-grid-save-state>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default" ng-init="::_cfg=blocks[block]" ng-if="blocks[block]">
+            <div class="panel-heading font-bold" ng-init="show=true;icon='fa-minus'">
+                <a ng-click="show=!show;icon=show?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon"></i> {{::_cfg.text}}</a>
+            </div>
+            <div class="panel-body" ng-show="show">
+          <div ui-grid="gridCfg[block]" class="bg-white m-b" ng-style="{height:expand_height(gridCfg[block])}"
+               ui-grid-edit
+               ui-grid-cellNav
+               ui-grid-resize-columns
+               ui-grid-auto-resize
+               ui-grid-pinning
+               ui-grid-save-state>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+<!-- ==============order_attach_export========== -->
+<script type="text/ng-template" id="order_attach_export.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="form-group row">
+            <div class="col-md-11">
+                <input class="col-md-1" type="radio" value="1" ng-model="data.calc_discount" />
+                <label class="col-md-4">{{'CALC_DISCOUNT' | i18n}}</label>
+                <input class="col-md-1" type="radio" value="0" ng-model="data.calc_discount" />
+                <label class="col-md-4">{{'NOCALC_DISCOUNT' | i18n}}</label>
+            </div>
+        </div>
+        <div class="clearfix m-t-lg">
+            <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+<!-- ==============certificate_see========== -->
+<script type="text/ng-template" id="certificate_see.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="row">
+            <span ng-repeat="(key,obj) in
+            {1:'ID_CARD',2:'PASSPORT',3:'TW_PASSPORT',4:'HK_PASSPORT'}" class = "col-md-3">
+            <input type="radio"  value="{{key}}" ng-model="data.type"/>
+            <label>{{obj | i18n}}</label>
+        </span>
+        </div>
+        <div class="row" ng-init="
+        attach_type={1:'id_attach',2:'passport_attach',3:'tw_passport_attach',4:'hk_passport_attach'}">
+        <img class="img-responsive" ng-src="{{appConst.HOST+'/'+data[attach_type[data.type]]}}" 
+              ng-if="data[attach_type[data.type]]"/>
+        </div>
+    </div>
+</script>
+<!--===============settle_log===================-->
+<script type="text/ng-template" id="settle_log.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="panel panel-default" ng-init="::_cfg=blocks[block]" ng-if="blocks[block]">
+            <div class="panel-heading font-bold" ng-init="show_h=true;icon_h='fa-minus'">
+                <a ng-click="show_h=!show_h;icon_h=show_h?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon_h"></i> {{::_cfg.text}}</a>
+            </div>
+            <div class="panel-body" ng-show="show_h">
+          <div ui-grid="gridCfg[block]" class="bg-white m-b" ng-style="{height:expand_height(gridCfg[block])}"
+                  ui-grid-cellNav
+                  ui-grid-resize-columns
+                  ui-grid-auto-resize
+                  ui-grid-pinning
+                  ui-grid-save-state
+                  >
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!--============== hold seat ================-->
+<script type="text/ng-template" id="hold_seat.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'CSTM' | i18n}}</label>
+                <div class="col-lg-10">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="data.short_name" readonly required />
+                        <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="trigger('占位新增客户')">{{::'ADD_COSTOM' | i18n}}</button>
+                    <button class="btn btn-default" type="button" ng-click="trigger('订单选择客户')">{{::'SEL' | i18n}}</button>
+                  </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'NUM_OF_PEOPLE' | i18n}}</label>
+                <div class="col-lg-10">
+                    <input type="number" class="form-control" ng-model="data.num_of_people" ui-validate=" '$value > 0' " required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'ASSITANT_EMPLOYEE' | i18n}}</label>
+                <div class="col-lg-10">
+                    <ui-select required ng-model="data.assitant_id" >
+                        <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum({edit_path:data.edit_path}) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!-- ===================branch_cond==================== -->
+<script type="text/ng-template" id="branch_cond_edit.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div  ui-grid="BranchCondGrid" class="bg-white" ng-style="{height:expand_height(BranchCondGrid)}" ui-grid-edit ui-grid-cellNav ui-grid-resize-columns ui-grid-auto-resize ui-grid-pinning ui-grid-save-state>
+        </div>
+        <div class="clearfix m-t-lg">
+            <button class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+
+<!-- ===================branch_cond==================== -->
+<script type="text/ng-template" id="branch_cond.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <div class="clearfix">
+                    <span ng-repeat="(key,value) in get_enum(data.type)" class="search-setting-item col-md-3">
+                    <input type="radio" value="{{key}}"  ng-model="data.cond_type"/>
+                    <label>{{value}}</label>
+                </span>
+                </div>
+            </div>
+        </form>
+        <div class="clearfix m-t-lg">
+            <button class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="form_see.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal">
+            <div class="form-group" ng-repeat="(field,_cfg) in ::blocks[cfg.block[0]].list">
+                <label class="col-lg-3 control-label">{{::_cfg.text}}</label>
+                <div class="col-lg-9">
+                    <div ng-class="::_cfg.btn?'input-group':''">
+                  <input ng-if="::!_cfg.type" type="text" class="form-control" ng-model="data[field]"
+                      ng-change="_cfg.change && this[_cfg.change](field)" ng-disabled="_cfg.ro" />
+                  <input ng-if="::_cfg.type=='number'" ng-init="::data[field]=+data[field]" type="number" class="form-control" 
+                      ng-change="_cfg.change && this[_cfg.change](field)" ng-model="data[field]" ng-disabled="_cfg.ro" />
+
+                  <input ng-if="::_cfg.type=='date'" type="text" ui-pikaday class="form-control" ng-model="data[field]" 
+                      ng-change="_cfg.change && this[_cfg.change](field)" ng-disabled="_cfg.ro" />
+                  <input ng-if="::_cfg.type=='time'" type="text" class="form-control" ng-model="data[field]" 
+                          ng-change="_cfg.change && this[_cfg.change](field)" ng-disabled="_cfg.ro"
+                          model-view-value="true" ui-options="timeMaskOpt" 
+                          ui-mask="{{data[field][0] == '2' ? '23:59' : '29:59'}}"  
+                          ui-mask-placeholder ui-mask-placeholder-char="__:__"/>
+                        <div ng-if="::_cfg.type=='file'" class="form-control no-border">
+                      <input type="file" name="file" class="hidden" 
+                          ui-file="{{_cfg.upload}}" 
+                          path="{{_cfg.path || field}}" 
+                          thumbnail="{{_cfg.thumbnail}}" />
+                            <a class="small text-info" onclick="$(this).prev().click()"><em>{{::'UPLOAD' | i18n}}</em></a>
+                        </div>
+                        <div ng-if="::_cfg.type=='img'">
+                            <img ng-src="{{appConst.HOST+'/'+data[field]}}" class="img-responsive" ng-if="data[field]" />
+                        </div>
+
+                  <ui-select 
+                      ng-if="::_cfg.type && !{number:1,date:1,time:1,file:1,img:1}[_cfg.type]"
+                      ng-model="data[field]"  ng-disabled="_cfg.ro" 
+                      ng-change="_cfg.change && this[_cfg.change](field)" >
+                            <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                            <ui-select-choices repeat="obj.key as (key,obj) in get_enum(_cfg,data) | filter: {value:$select.search}">
+                                <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                        <span class="input-group-btn" ng-if="::_cfg.btn">
+                      <button  class="btn btn-default" ng-click="trigger(_cfg.trigger,{text:_cfg.btn},null,data)">{{_cfg.btn}}</button>
+                  </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+<!-- ===================picture_edit==================== -->
+<script type="text/ng-template" id="picture_edit.html">
+    <div class="modal-body wrapper-lg">
+        <div class="form-group row">
+            <div ng-repeat='picture in data.picture_arr track by $index' class="col-md-3 m-b">
+                <a class="itinerary-btn" ng-click="picture_delete($index)">
+                    <i class="icon-close text-md m-t-xxs" style="color: #ff7070;"></i>
+                </a>
+                <img  style="height: 100px;width:200px;border:5px solid;"  
+                        ng-src ="{{picture.thumbnail?(appConst.HOST+'/'+picture.thumbnail):'img/upload.png'}}" 
+                        ng-click = 'picture_upload($index)'
+                        class = "col-md-offset-1"
+                         />
+                <div class="row m-t-md">
+                    <label class='col-md-4'>{{'图片名称' | i18n}}</label>
+                    <input class='col-md-6' type="text" class="form-control" ng-model="picture.name" />
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!-- ===================add_elc_contract==================== -->
+<script type="text/ng-template" id="add_elc_contract.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="tu-grid-label m-l">{{::'CONTRACT_TYPE' | i18n}}<i class="{{expandCls[0]}}"></i>
+                </label>
+                <div class="clearfix">
+                    <span ng-repeat="(key,value) in get_enum(data)" class="search-setting-item col-md-4">
+                    <input type="radio" value="{{key}}"  ng-model="data.contract_type"/>
+                    <label>{{value}}</label>
+                </span>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="elecContract.html">
+    <div class="wrapper-md">
+        <div class="panel panel-default" ng-repeat="block in ::cfg.block" ng-init="::_cfg=blocks[block]" ng-if="!block_hide[block]">
+        <div class="panel-heading font-bold" ng-init="show=true;icon='fa-minus'"
+        >
+            <a ng-click="show=!show;icon=show?'fa-minus':'fa-plus'" 
+            ng-class = "{'active-blk':this[_cfg.active]}">
+                    <i class="fa fa-plus" ng-class="icon"></i> {{::_cfg.text}}
+                </a>
+                <span ng-if="::!(cfg.ro[$index]==1)">
+                <a class="fw-normal m-l-lg btn btn-xs btn-default" ng-repeat="(act, __cfg) in ::_cfg.action" ng-if="::!(__cfg.bind=='row') && !(cfg.btn_hide[act])" ng-click="trigger(act,__cfg,block)" >{{::__cfg.text}}</a>
+            </span>
+            </div>
+            <div class="panel-body" ng-show="show">
+                <label ng-if="block == '发团约定'">最低成团人数：{{data['personLimit']}}人，如未达到最低出团人数，旅游者是否同意按下列方式解决</label>
+                <label ng-if="block == '争议解决'">本合同履行过程中发生争议，由双方协商解决；亦可向合同签订地的旅游质监执法机构、消费者协会等有关部门或者机构申请调解解决
+                争议解决方式选择：协商或者调解不成的，按下列方式解决：</label>
+                <label ng-if="block == '账户详情-单项合同'">甲方按照下列账号方式向乙方付款，除此之外甲方不得以任何方式向第三方或个人账户付款，否则乙方不予认可，由此造成的损失由甲方自行承担</label>
+                <label ng-if="block == '收款账户-电子合同'">甲方按照上述支付方式向乙方支付款项，除上述支付方式外甲方不得以任何方式向第三方或个人账户支付款项，门市部负责人及员工均不得收取任何款项，否则乙方不予认可，由此造成的损失由甲方自行承担</label>
+                <div ui-grid="gridCfg[block]" class="bg-white" ng-style="{height:expand_height(gridCfg[block])}" ng-if = "::_cfg.list"
+                    ui-grid-selection
+                    ui-grid-edit
+                    ui-grid-cellNav
+                    ui-grid-resize-columns
+                    ui-grid-auto-resize
+                    ui-grid-pinning
+                    ui-grid-save-state>
+                </div>
+                <div class="bg-white" ng-if="block == '委托项目'">
+                    <div class="row">
+                        <div class="col-md-4" ng-repeat="item in data['委托项目']">
+                            <div class="col-md-3">
+                                <input type="checkbox" ng-model="item.choose" ng-true-value="1" ng-false-value="0" />
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" ng-model="item.value" readonly />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</script>
+
+<!-- 修改控团人 -->
+<script type="text/ng-template" id="modify_manager.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <div class="row m-b">
+                    <label class="col-md-2">{{data.old_selected_label}}</label>
+            <ui-select required class = "col-md-5"
+                ng-model="data.old_selected"  ng-disabled="true"  >
+                        <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:data.type}) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="row">
+                    <label class="col-md-2">{{data.new_selected_label}}</label>
+            <ui-select required class = "col-md-5"
+                ng-model="data.selected"  ng-disabled="disabled"  >
+                        <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum({edit_path:data.edit_path}) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+            </div>
+            </div>
+          <div class="clearfix m-t-lg">
+              <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+          </div>
+      </form>
+
+</div>
+</script>
+<!-- 修改头像 -->
+<script type="text/ng-template" id="edit_photo.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="clearfix">
+                <div class="cropArea">
+                    <img-crop image="data.photo" result-image="data.myCroppedImage"></img-crop>
+                </div>
+                <div class="cropImg">
+                    <img ng-src="{{data.myCroppedImage}}" />
+                </div>                
+            </div>
+
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="submit()">
+                    <strong>{{::'SUBMIT' | i18n}}</strong>
+                </button>
+                <input type="file" id="fileInput" class="hidden"/>
+                <button type="button" class="btn btn-sm btn-success pull-right mr-10" onclick="$(this).prev().click()">
+                    <strong>{{::'UPLOAD' | i18n}}</strong>
+                </button>                
+            </div>
+        </form>
+    </div>
+</script>
+<!-- 审核头像 -->
+<script type="text/ng-template" id="approval_photo.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div style="border: 1px solid #ededed;padding: 20px;">
+                <img ng-src="{{appConst.HOST+'/'+data.photo}}" class="img-responsive" style="max-height: 100px;max-width: 100px;margin: 0 auto;">
+            </div>
+            <div class="radio">
+              <label class="col-sm-6">
+                <input type="radio" name="optionsRadios" id="optionsRadios1" value="1" ng-model="data.approval">审批通过
+              </label>
+              <label class="col-sm-6">
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="2" ng-model="data.approval">拒审批
+              </label>              
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>            
+        </form>
+    </div>
+</script>
+
+<!--============== inquiry_related_order ================-->
+<script type="text/ng-template" id="inquiry_related_order.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'ORDER_ID' | i18n}}</label>
+                <div class="col-lg-10">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="data.order_num" readonly required />
+                        <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="trigger('选择订单-关联询单')">{{::'SEL' | i18n}}</button>
+                  </span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+<!--============== balance check ================-->
+<script type="text/ng-template" id="balance_check.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{data.title}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div>
+            <input type="text" class="form-control" ng-model="data.msg" readonly="true" />
+        </div>
+    </div>
+</script>
+
+<!--============== edit schedule ================-->
+<script type="text/ng-template" id="edit_schedule.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="panel panel-default" ng-init="::_cfg=blocks['待办日期']" ng-if="blocks['待办日期']">
+                <div class="panel-heading font-bold" ng-init="show_h=true;icon_h='fa-minus'">
+                    <a ng-click="show_h=!show_h;icon_h=show_h?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon_h"></i> {{::_cfg.text}}</a>
+                </div>
+                <div class="panel-body" ng-show="show_h">
+                    <div ui-grid="gridCfg['待办日期']" class="bg-white m-b" ng-style="{height:expand_height(gridCfg['待办日期'])}"
+                        ui-grid-edit
+                        ui-grid-cellNav
+                        ui-grid-resize-columns
+                        ui-grid-auto-resize
+                        ui-grid-pinning
+                        ui-grid-save-state
+                      >
+                    </div>
+                </div>
+            </div>
+            <div class="text-bold pb-10">{{::'SCHEDULE_TITLE' | i18n}}</div>
+            <input class="form-control mb-15" type="text" ng-model = 'data.title' class="m-b" ng-disabled = "::(cfg.ro[cfg.block.indexOf('待办日期')]==1)">
+            <div class="text-bold pb-10">{{::'SCHEDULE_INFO' | i18n}}</div>
+            <textarea ui-auto-textarea ng-model="data.body" class="form-control m-b over-hide" style="overflow: hidden;" ng-disabled = "::(cfg.ro[cfg.block.indexOf('待办日期')]==1)"></textarea>
+            <div>
+                <div class="panel panel-default" ng-init="::_cfg=blocks['待办事件提醒']" ng-if="blocks['待办事件提醒']">
+                    <div class="panel-heading font-bold" ng-init="show_h=true;icon_h='fa-minus'">
+                        <a ng-click="show_h=!show_h;icon_h=show_h?'fa-minus':'fa-plus'"><i class="fa fa-plus" ng-class="icon_h"></i> {{::_cfg.text}}</a>
+                        <span ng-if="::!(cfg.ro[cfg.block.indexOf('待办事件提醒')]==1)">
+                        <a class="fw-normal m-l-lg btn btn-xs btn-default" ng-repeat="(act, __cfg) in ::_cfg.action" ng-if="::!(__cfg.bind=='row') && !(cfg.btn_hide[act])" ng-click="trigger(act,__cfg,'待办事件提醒')" >{{::__cfg.text}}</a>
+                    </div>
+                    <div class="panel-body" ng-show="show_h">
+                        <div ui-grid="gridCfg['待办事件提醒']" class="bg-white m-b" ng-style="{height:expand_height(gridCfg['待办事件提醒'])}"
+                            ui-grid-edit
+                            ui-grid-cellNav
+                            ui-grid-resize-columns
+                            ui-grid-auto-resize
+                            ui-grid-pinning
+                            ui-grid-save-state
+                          >
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-click="submit()" ng-if = "::!(cfg.ro[cfg.block.indexOf('待办日期')]==1)">
+                    <strong>{{::'OK' | i18n}}</strong></button>
+            </div>      
+        </form>
+    </div>
+</script>
+
+<!--============== choose product template type================-->
+<script type="text/ng-template" id="choose_pd_temp_type.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::'PD_TEMPLATE' | i18n}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="radio" ng-repeat="(key,value) in get_enum(data)" >
+              <label>
+                <input type="radio" value="{{key}}"  ng-model="data.pd_template_type" />{{value}}
+              </label>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'PD_RELEASE' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div> 
+</script>
+
+
+<script type="text/ng-template" id="product_recommend.html">
+     <div modal-movable class="tu-modal-head">
+        <h4 class="text-left tu-modal-title padder">{{data.pd_name}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="row" ng-repeat="(key,name) in get_enum('B2cPicPos')">
+            <label class="col-md-6 m-b" >
+            <input type="checkbox" value="key" ng-checked="data.pos_arr.indexOf(key)!==-1" ng-click="toggleCheckbox(key,data.pos_arr)">
+            {{name}}
+            </label>
+            <div ng-if = "-1!==data.show_pic_arr.indexOf(key)">
+                <input type="file" name="file" class="hidden" ui-file="gallery" path="pic_arr.{{key}}" />
+                <a class="small text-info" onclick="$(this).prev().click()"><em>{{'UPLOAD' | i18n}}</em></a>&nbsp;&nbsp;&nbsp;
+                <span style="display: inline-block;vertical-align: top;" ng-if="data.pic_arr[key]">
+                    <img ng-src="{{appConst.HOST+'/'+data.pic_arr[key]}}" class="img-responsive" style="max-height: 100px;max-width: 100px">
+                </span>
+            </div>
+        </div>
+        <div class="clearfix m-t-lg">
+            <button class="btn btn-sm btn-success pull-right" ng-click="submit()"><strong>{{::'OK' | i18n}}</strong></button>
+        </div>
+    </div> 
+</script>
+
+<!--============== order_lock_state ================-->
+<script type="text/ng-template" id="tourist_lock_state.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <label class="col-lg-2 control-label">{{::'ORDER_TOURIST_LOCK' | i18n}}</label>
+                <div class="col-lg-10">
+                    <label class="i-switch m-t-xs m-r">
+                        <input type="checkbox" ng-model="data.tourist_lock_state" ng-true-value="'1'" ng-false-value="'0'">
+                        <i></i>
+                    </label>
+                </div>
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()"><strong>{{::'SAVE' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+

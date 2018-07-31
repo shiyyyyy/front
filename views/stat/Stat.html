@@ -1,0 +1,94 @@
+<div class="wrapper-md">
+    <div class="panel panel-default">
+        <div class="panel-heading font-bold" ng-init="show=true;icon='fa-minus'">
+            <a ng-click="show=!show;icon=show?'fa-minus':'fa-plus'">
+                <i class="fa fa-plus" ng-class="icon"></i> {{::'PARAM_SET' | i18n}}</a>
+        </div>
+        <div class="panel-body" ng-show="show">
+
+            <div>
+                <label style="width:100px;">{{::'STAT_DATA' | i18n}}</label>
+                <input class="btn btn-default btn-sm place-color" ng-click="edit_stat_data(stat_data_config,f_field,mod)" placeholder="{{::'SELECT_STAT_DATA' | i18n}}"
+                    ng-model="select_arr" style="width: 327px;">
+                <!-- {{::'SELECT_STAT_DATA' | i18n}} -->
+                <!-- </button> -->
+            </div>
+            <br/>
+
+            <div class="row">
+                <label class="col-md-1" style="width:89px;">{{::'DATE_LIMIT' | i18n}}</label>
+                <div class="col-md-2 m-l" ng-repeat="(r_field,r_filter) in date_filter">
+                    <input ng-if="r_filter.type=='date'" type="text" placeholder="{{r_filter.text}}" class="btn-default form-control place-color cursor-pointer text-center"
+                        ng-model="param[r_field]" ui-pikaday />
+                </div>
+            </div>
+
+            <br/>
+            <div ng-show="selectedShow" class="selected">
+                <span>{{::'SELECTED DATA' | i18n}}</span>
+                <div>
+                    <pre>{{select}}</pre>
+                </div>
+            </div>
+            <br/>
+
+            <div>
+                <label style="width:100px;">{{::'CHART_SET' | i18n}}</label>
+                <!-- <label>{{::'HOR_AXIS' | i18n}}</label> -->
+                <select class="cursor-pointer text-center select-style" ng-model="param.group_by" ng-options="fd as cfg.text for (fd,cfg) in horizontal_axis">
+                </select>
+                <label class="mar-l-40 display-none">{{ lang != "1" ? '请选择' : 'Please select a ' }}{{::'HOR_AXIS' | i18n}}</label>
+                <br />
+                <!-- <div style="display: inline-block" ng-repeat="(fd,cfg) in horizontal_axis">
+                        <label for="{{cfg.text}}" name="cgf.text">{{cfg.text}}</label>
+                        <input type="radio" ng-model="{{cfg.text}}" name="cgf.text" id="{{cfg.text}}" />
+                    </div> -->
+                <!-- <span style="border-right: 2px solid #7266ba;margin:0 20px;"></span> -->
+
+                <div class="mar-t-20 mar-l-103">
+                    <button type="button" class="btn btn-s btn-primary" ng-click="submit_histogram()">生成柱状图</button>
+                    <button style="margin-left: 10px;" type="button" class="btn btn-s btn-primary" ng-click="submit_pie()">生成饼状图</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-repeat="item in chart_arr">
+        <div id="{{item}}"></div>
+        <div id="slider{{item}}"></div>
+    </div>
+</div>
+
+<script type="text/ng-template" id=stat_limit.html>
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancelChange()">{{cancel}}</button>
+    </div>
+    <div class="tu-modal-body">
+        <ul class="m-t">
+            <li class="row m-t limit" style="position: relative;padding-right: 10px;" ng-repeat='(field,cfg) in filter' ng-if="field == f_field">
+                <div class="col-md-2">{{cfg.text}}</div>
+                <ul class="list-inline col-md-10">
+                    <li class="list-inline-item w-33 text-left width-auto pad-r-20" ng-repeat="(id,item) in get_enum(cfg,null,field)">
+                        <a ng-class="{'limit-active':spec[field].indexOf(id)>-1}" ng-click="set_spec(field,id,item)">{{item}}</a>
+                        <a class="posi-ab top-3 right-5 cancel text-center" ng-click="delete_spec(field,id,item)" ng-show="spec[field].indexOf(id)>-1">&nbsp;×&nbsp;</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="row m-t limit" style="position: relative;padding-right: 10px;" ng-repeat='(field,cfg) in filter' ng-if="(field != f_field)&&!_.isEmpty(cur_data[cfg.cascade])">
+                <div class="col-md-2">{{cfg.text}}</div>
+                <ul class="list-inline col-md-10 flex max-h-300 over-auto">
+                    <li class="list-inline-item w-33 h-20px over-hide text-left pad-r-20" ng-repeat="(id,item) in get_enum(cfg,cur_data,field)">
+                        <a ng-class="{'limit-active':spec[field].indexOf(id)>-1}" ng-click="set_spec(field,id,item)" title="{{item}}">{{item}}</a>
+                        <a class="posi-ab top-3 right-5 cancel text-center" ng-click="delete_spec(field,id,item)" ng-show="spec[field].indexOf(id)>-1">&nbsp;×&nbsp;</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="clearfix m-t-lg">
+        <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()">
+            <strong>{{::'OK' | i18n}}</strong>
+        </button>
+    </div>
+</script>

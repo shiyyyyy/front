@@ -1,0 +1,394 @@
+<div class="wrapper-md">
+    <!-- hbox layout -->
+    <div class="hbox hbox-auto-xs hbox-auto-sm bg-light">
+        <!-- column -->
+        <div class="col w lter">
+            <div class="vbox">
+                <div class="row-row">
+                    <div class="cell scrollable hover">
+                        <div class="cell-inner">
+                            <div class="m-t-n-xxs">
+                                <div class="list-group list-group-lg no-radius no-border no-bg m-b-none">
+                                    <a ng-repeat="item in vm.items" class="list-group-item m-l" ng-class="{'select m-l-none': (vm.selected==item) }" ng-click="vm.selected=item">
+                                        <span class="block text-ellipsis m-l-n text-base" ng-class="{'m-l-none': (vm.selected==item) }">
+                                          {{ item }}
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /column -->
+        <!-- column -->
+        <div class="col bg-white-only b-a">
+            <div class="vbox">
+                <div class="wrapper-sm b-b" style="padding: 10px 10px 11px 10px;">
+                    <div class="m-t-n-xxs m-b-n-xxs">
+                        <a class="btn btn-sm btn-info" ng-hide="item.editing" ng-click="submit()">{{'SAVE' | i18n}}</a>
+                    </div>
+                </div>
+                <div>
+                    <div ng-show="vm.selected=='系统配置'">
+                        <textarea ng-model="data['系统配置']" style="width:100%;height: 204px;"></textarea>
+                        <button class="btn btn-sm btn-info m-10" ng-click="update_flow()">更新审批流程</button>
+                        <button class="btn btn-sm btn-info" ng-click="clear_cache()">清空缓存</button>
+                    </div>
+                    <form class="form-horizontal" ng-show="vm.selected=='系统参数'">
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label sys-label">{{'LOGIN_TO' | i18n}}</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['系统参数'].login_timeout" />&nbsp;{{'AUTO_LOGOUT' | i18n}}
+                            </div>
+                        </div>
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label sys-label">{{'SHARE_CONTACT' | i18n}}</label>
+                            <div class="col-sm-10" style="display: flex;align-items: center;height: 26px;">
+                                <label class="i-switch m-r">
+                                    <input type="checkbox" checked="" ng-model="data['系统参数'].share_contact">
+                                    <i></i>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label sys-label">{{'ID_CARD_APPCOADE' | i18n}}</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['系统参数'].id_card_appcode" />
+                            </div>
+                        </div>
+<!--                         <div class="form-group sys-list">
+                            <div class="row m-b">
+                            <label class="col-sm-2 control-label sys-label">签署合同企业名称</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['系统参数'].hgy_entname" />
+                            </div>
+                            <label class="col-sm-2 control-label sys-label">企业营业执照编号 </label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['系统参数'].hgy_bussLicence" />
+                            </div> 
+                            </div>
+                            <div class="row m-b">
+                            <label class="col-sm-2 control-label sys-label">被授权人名称</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['系统参数'].hgy_grantorname" />
+                            </div>
+                            <label class="col-sm-2 control-label sys-label">被授权人手机号</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['系统参数'].hgy_grantorhandphone" />
+                            </div> 
+                            </div>  
+                            <div class="row">
+                            <label class="col-sm-2 control-label sys-label">{{'APPID' | i18n}}</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['系统参数'].hgy_app_id" />
+                            </div>
+                            <label class="col-sm-2 control-label sys-label">{{'APPSECRECT' | i18n}}</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['系统参数'].hgy_app_secrect" />
+                            </div> 
+                            </div>                                                       
+                        </div>   -->
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label sys-label">libreoffice</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['系统参数'].libreoffice" size="60"/>
+                                <input type="text" ng-model="data['系统参数'].libreoffice_port" />
+                            </div>
+                        </div>
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label sys-label">gs</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['系统参数'].gs" size="60"/>
+                            </div>
+                        </div>
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label sys-label">cpdf</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['系统参数'].cpdf" size="60"/>
+                            </div>
+                        </div>
+                        <div class="form-group sys-list">
+                            <div class="row">
+                                <label class="col-sm-2 control-label sys-label">阿里云SMS键</label>
+                                <div class="col-sm-4">
+                                    <input type="text" ng-model="data['系统参数'].ali_sms_key" />
+                                </div>
+                                <label class="col-sm-2 control-label sys-label">阿里云SMS密匙</label>
+                                <div class="col-sm-4">
+                                    <input type="text" ng-model="data['系统参数'].ali_sms_sec" />
+                                </div> 
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2 control-label sys-label">阿里云SMS签名</label>
+                                <div class="col-sm-4">
+                                    <input type="text" ng-model="data['系统参数'].ali_sms_sign" />
+                                </div>
+                                <label class="col-sm-2 control-label sys-label">阿里云SMS验证码模板</label>
+                                <div class="col-sm-4">
+                                    <input type="text" ng-model="data['系统参数'].ali_sms_verify" />
+                                </div> 
+                            </div>                                                      
+                        </div>                      
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label sys-label">{{'LOGO' | i18n}}</label>
+                            <div class="col-sm-10" style="line-height: 26px;">
+                                <input type="file" name="file" class="hidden" ui-file="logo" path="系统参数.logo" />
+                                <a class="small text-info" onclick="$(this).prev().click()"><em>{{'UPLOAD' | i18n}}</em></a>&nbsp;&nbsp;&nbsp;
+                                <span style="display: inline-block;vertical-align: top;">
+                                  <img ng-src="{{appConst.HOST+'/'+data['系统参数'].logo}}" ng-if = "data['系统参数'].logo" class="img-responsive" style="max-height: 100px;">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group m-0" style="padding: 13px 0;">
+                            <label class="col-sm-2 control-label sys-label">{{'SHARE_ICON' | i18n}} 256x256</label>
+                            <div class="col-sm-10">
+                                <input type="file" name="file" class="hidden" ui-file="share_icon" path="系统参数.share_icon" />
+                                <a class="small text-info" style="line-height: 26px;" onclick="$(this).prev().click()"><em>{{'UPLOAD' | i18n}}</em></a>&nbsp;&nbsp;&nbsp;
+                                <span style="display: inline-block;vertical-align: top;">
+                                  <img ng-src="{{appConst.HOST+'/'+data['系统参数'].share_icon}}" ng-if = "data['系统参数'].share_icon" class="img-responsive" style="max-height: 100px;">
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                    <div ng-show="vm.selected=='团号设置'">
+                        <div style="padding: 16px 10px;"><span ng-repeat="item in data['团号设置']"><span ng-if="item[1]">{{item[3]+item[2]}}</span></span>
+                        </div>
+                        <div ui-grid="groupNumGrid" class="bg-white" ng-style="{height:expand_height(groupNumGrid)}" ui-grid-selection ui-grid-edit ui-grid-cellNav ui-grid-resize-columns ui-grid-auto-resize ui-grid-pinning ui-grid-save-state>
+                        </div>
+                    </div>
+                    <div class="row m-0" ng-show="vm.selected=='保险设置'">
+                        <div class="col-md-4 b-r pb-10">
+                            <h5>保险接口（大地保险）：</h5>
+                            <div class="form-group">
+                                <label>账号：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].dadi.insure_user" />
+                            </div>
+                            <div class="form-group">
+                                <label>密码：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].dadi.insure_password" />
+                            </div>
+                            <div class="form-group">
+                                <label>用户ID：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].dadi.insure_userid" />
+                            </div>
+                            <div class="form-group">
+                                <label>邮箱：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].dadi.email" />
+                            </div>
+                            <div class="form-group">
+                                <label>接口地址：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].dadi.insure_url" />
+                            </div>
+                            <button class="btn btn-info btn-xs" ng-click="insure_plans('dadi')">获取方案</button>
+                        </div>
+                        <div class="col-md-4 b-r pb-10">
+                            <h5>保险接口（太平洋保险）：</h5>
+                            <div class="form-group">
+                                <label>账号：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].cpic.AgentID" />
+                            </div>
+                            <div class="form-group">
+                                <label>密码：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].cpic.AgentPassword" />
+                            </div>
+                            <div class="form-group">
+                                <label>授权码：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].cpic.EmpAuthCode" />
+                            </div>
+                            <div class="form-group">
+                                <label>接口地址：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].cpic.AgentUrl" />
+                            </div>
+                            <button class="btn btn-info btn-xs" ng-click="insure_plans('cpic')">获取方案</button>
+                        </div>
+                        <div class="col-md-4 pb-10">
+                            <h5>保险接口（安馒保险）：</h5>
+                            <div class="form-group">
+                                <label>账号：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].anman.tlink_user" />
+                            </div>
+                            <div class="form-group">
+                                <label>密码：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].anman.privateKey" />
+                            </div>
+                            <div class="form-group">
+                                <label>接口地址：</label>
+                                <input type="text" class="form-control" ng-model="data['保险设置'].anman.AgentUrl" />
+                            </div>
+                            <button class="btn btn-info btn-xs" ng-click="insure_plans('anman')">获取方案</button>
+                        </div>
+                    </div>
+                    <div class="row m-0" ng-show="vm.selected=='发票设置'">
+                        <div class="col-md-4 b-r pb-10">
+                            <div class="form-group">
+                                <label>发票抬头：</label>
+                                <input type="text" class="form-control" ng-model="data['发票设置'].title" />
+                            </div>
+                            <div class="form-group">
+                                <label>纳税人识别号：</label>
+                                <input type="text" class="form-control" ng-model="data['发票设置'].taxpayer_number" />
+                            </div>
+                            <div class="form-group">
+                                <label>开户行：</label>
+                                <input type="text" class="form-control" ng-model="data['发票设置'].taxpayer_bank" />
+                            </div>
+                            <div class="form-group">
+                                <label>银行账号：</label>
+                                <input type="text" class="form-control" ng-model="data['发票设置'].taxpayer_bank_account" />
+                            </div>
+                            <div class="form-group">
+                                <label>地址：</label>
+                                <input type="text" class="form-control" ng-model="data['发票设置'].taxpayer_address" />
+                            </div>
+                            <div class="form-group">
+                                <label>电话：</label>
+                                <input type="text" class="form-control" ng-model="data['发票设置'].taxpayer_mobile" />
+                            </div>
+                        </div>
+                    </div>
+                    <form class="form-horizontal" ng-show="vm.selected=='财务设置'" style="padding: 16px 0">
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label text-right">{{'PAYBACK_REMIND_DATE' | i18n}}</label>
+                            <select ng-model="data['财务设置'].day_limit" class="col-sm-2" ng-options="item for item in Days">
+                            </select>
+                            <span>&nbsp;&nbsp;&nbsp;{{'DAY'|i18n}}</span>
+                        </div>
+                        <div class="form-group sys-list">
+                            <label class="col-sm-2 control-label text-right">{{'RETURN_TICKET' | i18n}}</label>
+                            <div class="col-sm-10" style="display: flex;align-items: center;height: 45px;">
+                                <label class="i-switch m-r">
+                                    <input type="checkbox" checked="" ng-model="data['财务设置'].return_ticket">
+                                    <i></i>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                    <div ng-show="vm.selected=='余额设置'" style="padding: 16px 0">
+                        <div class='form-group'>
+                            <label class="col-sm-2 control-label text-right">{{'BALANCE_CHECK' | i18n}}</label>
+                            <input type="number" class="col-sm-2" ng-model="data['余额设置'].amount" />
+                            <span>&nbsp;&nbsp;&nbsp;{{'RMB'|i18n}}</span>
+                        </div>
+                    </div>
+                    <div ng-show="vm.selected == '合同设置'" style="padding: 16px 0">
+                        <div class="form-group">
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">画个押令牌接口</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['合同设置'].hgy_tokenurl" />
+                            </div>
+                            </div>
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">画个押用户签名接口</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['合同设置'].hgy_signurl" />
+                            </div>
+                            </div>
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">画个押获取用户签名接口</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['合同设置'].hgy_getsignproofurl" />
+                            </div>
+                            </div>
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">画个押用户盖章接口</label>
+                            <div class="col-sm-10">
+                                <input type="text" ng-model="data['合同设置'].hgy_signbyproofurl" />
+                            </div>
+                            </div>
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">签署合同企业名称</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['合同设置'].hgy_entname" />
+                            </div>
+                            <label class="col-sm-2 control-label sys-label">企业营业执照编号 </label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['合同设置'].hgy_bussLicence" />
+                            </div> 
+                            </div>
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">被授权人名称</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['合同设置'].hgy_grantorname" />
+                            </div>
+                            <label class="col-sm-2 control-label sys-label">被授权人手机号</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['合同设置'].hgy_grantorhandphone" />
+                            </div> 
+                            </div>  
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">{{'APPID' | i18n}}</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['合同设置'].hgy_app_id" />
+                            </div>
+                            <label class="col-sm-2 control-label sys-label">{{'APPSECRECT' | i18n}}</label>
+                            <div class="col-sm-4">
+                                <input type="text" ng-model="data['合同设置'].hgy_app_secrect" />
+                            </div> 
+                            </div>
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">{{'ELC_KK_DEPARTMENT' | i18n}}</label>
+                            <div class="col-sm-4">
+                                <ui-select 
+                                    ng-model="data['合同设置'].kk_department_id">
+                                    <ui-select-match>{{ $select.selected.value }}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum('Department') | filter: {value:$select.search}">
+                                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <label class="col-sm-2 control-label sys-label">{{'ELC_KK_EMPLOYEE' | i18n}}</label>
+                            <div class="col-sm-4">
+                                <ui-select 
+                                    ng-model="data['合同设置'].kk_employee_id">
+                                    <ui-select-match>{{ $select.selected.value }}
+                                    </ui-select-match>
+                                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:'Employee',cascade:'kk_department_id'},data['合同设置']) | filter: {value:$select.search}">
+                                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div> 
+                            </div>
+                            <div class="row m-l">
+                            <label class="col-sm-2 control-label sys-label">{{'ELC_KK_AMOUNT' | i18n}}</label>
+                            <div class="col-sm-4">
+                                <input type="number" ng-model="data['合同设置'].kk_amount" />
+                            </div> 
+                            </div>                                                           
+                        </div>  
+                    </div>
+                    <div ng-show="vm.selected=='订单设置'" style="padding: 16px 0">
+                        <div class='form-group'>
+                            <label class="col-sm-2 control-label text-right">{{'TOURIST_TEMPLATE' |i18n}}</label>
+                            <input type="file" name="file" class="hidden" ui-file="tourist_template" path="订单设置.tourist_template" />
+                            <a class="small text-info " onclick="$(this).prev().click()"><em>{{'UPLOAD' | i18n}}</em></a>&nbsp;&nbsp;&nbsp;
+                            <a class="small text-info" ng-if ="data['订单设置'].tourist_template" ng-href="{{appConst.HOST+'/'+data['订单设置'].tourist_template}}" target="_blank"><em>{{::'DOWNLOAD' | i18n}}</em></a>
+                        </div>
+                    </div> 
+                    <div ng-show="vm.selected == '排除控团人'" style="padding: 16px 0">
+                        <div class="form-group">
+                            <div class="row m-b m-l">
+                            <label class="col-sm-2 control-label sys-label">{{'EXCLUDE_GROUP' | i18n}}</label>
+                            <div class="col-sm-4">
+                                <ui-select 
+                                    ng-model="data['排除控团人'].employee_ids" multiple>
+                                    <ui-select-match>{{ $item.value }}</ui-select-match>
+                                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum('Employee') | filter: {value:$select.search}">
+                                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div> 
+                            </div>                                                           
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /column -->
+    </div>
+    <!-- /hbox layout -->
+</div>

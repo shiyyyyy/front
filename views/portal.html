@@ -1,0 +1,120 @@
+<!-- navbar -->
+<div class="app-header navbar {{app.settings.headerBackground}}">
+    <!-- navbar header -->
+    <div class="navbar-header {{app.settings.navbarHeaderColor}}" style="height:75px;padding: 0 10px;display: flex;align-items: center;">
+        <button class="pull-right visible-xs dk" ui-toggle-class="show" data-target="{{::'#header'}}">
+            <i class="glyphicon glyphicon-cog"></i>
+        </button>
+        <button class="pull-right visible-xs" ui-toggle-class="off-screen" data-target=".app-aside" ui-scroll="app">
+            <i class="glyphicon glyphicon-align-justify"></i>
+        </button>
+        <!-- brand -->
+        <img ng-if="app.logo" ng-src="{{app.logo}}" class="hidden-folded hidden-xs img-responsive center-block" style="max-height: 75px;"/>
+        <span class="navbar-brand text-lt" style="line-height: 75px;">
+            <!-- <i class="fa fa-btc"></i> -->
+            <span class="hidden-folded m-l-xs pull-right visible-xs">{{::title}}</span>
+            <span ng-if="!app.logo" class="hidden-folded m-l-xs hidden-xs">{{::app.name}}<span class="subhead">{{::app.subhead}}</span></span>
+        </span>
+        <!-- / brand -->
+    </div>
+    <!-- / navbar header -->
+
+    <!-- navbar collapse -->
+    <div class="collapse pos-rlt b-b navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}" style="padding: 5px 20px;">
+        <div class="header-tab">
+          <span class="header-tab-item text-sm {{app.settings.navbarTabColor}}" ng-class="mod!=cur_mod?'':app.settings.bgChange"  ng-repeat="(mod,name) in tabs">
+            <a href ng-class="{'header-tab-text':mod!=cur_mod}" ng-click="switch_tab(mod)">{{name}}</a>&nbsp;&nbsp;
+            <a href class="del-btn" ng-class="{'header-tab-text':mod!=cur_mod}" ng-click="close_tab(mod)" ng-if="mod!='HOME'"><i class="fa fa-close"></i></a>
+          </span>
+        </div>
+    </div>
+    <div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}" id="header" style="padding: 5px 20px;">
+    </div>
+    <!-- / navbar collapse -->
+</div>
+<!-- / navbar -->
+
+<!-- menu -->
+<div class="app-aside hidden-xs {{app.settings.asideBackground}}">
+    <div class="aside-wrap {{app.settings.asideBackground}}">
+        <div class="navi-wrap">
+            <!-- nav -->
+            <nav ui-nav class="navi">
+                <ul class="nav navList">
+                    <li>
+                        <a ng-click="app.settings.asideFolded = !app.settings.asideFolded" style="height: 40px;line-height: 40px;">
+                            <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw text-info-dker"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="open_mod('HOME')">
+                            <i class="fa fa-home text-info-dker"></i>
+                            <span class="font-bold">{{::'HOME' | i18n}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="open_mod('公告中心')">
+                            <i class="fa fa-bullhorn text-info-dker"></i>
+                            <span class="font-bold">{{::'ANNOUNCE' | i18n}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="open_mod('消息通知')">
+                            <i class="fa fa-envelope text-info-dker"></i>
+                            <span class="font-bold">{{::'MESSAGE' | i18n}}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-click="open_mod('审批任务')">
+                            <i class="fa fa-gavel text-info-dker"></i>
+                            <span class="font-bold">{{::'APPROVAL' | i18n}}</span>
+                        </a>
+                    </li>
+                    <li ng-repeat="(cat,mods) in ::menu">
+                        <a class="auto">
+                            <span class="pull-right text-muted">
+                                <i class="fa fa-fw fa-angle-right text"></i>
+                                <i class="fa fa-fw fa-angle-down text-active"></i>
+                            </span>
+                            <i class="fa fa-{{::icon[$index]}} text-success"></i>
+                            <span class="font-bold">{{::cat}}</span>
+                        </a>
+                        <ul class="nav nav-sub dk">
+                            <li class="nav-sub-header">
+                                <a href>
+                                    <span>{{::cat}}</span>
+                                </a>
+                            </li>
+                            <li ng-repeat="(mod,cfg) in ::mods"  context-menu="click_options(mod,cfg)" uib-tooltip="{{cfg.tooltip||''}}" 
+                            tooltip-append-to-body="true">
+                                <a ng-click="open_mod(mod,cfg)">
+                                    <span>{{::cfg.text}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <!-- nav -->
+        </div>
+    </div>
+</div>
+<!-- / menu -->
+
+<!-- content -->
+<div class="app-content" ng-style="{'background':app.settings.contentBackground}">
+    <div ui-butterbar></div>
+    <a href class="off-screen-toggle hide" ui-toggle-class="off-screen" data-target=".app-aside" ></a>
+    <div class="app-content-body fade-in-up" id="content"></div>
+</div>
+<!-- /content -->
+
+<!-- footer -->
+<div class="app-footer wrapper b-t bg-light" style="background: #fff;color: #333;">
+    <span class="pull-right">{{app.version}} <a href ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a></span>
+    Copyright&copy; 2017 - {{::app.name}}
+</div>
+<!-- / footer -->
+
+<div ng-show="app.theme" ng-include=" 'views/settings.html?_=5' " class="settings panel panel-default active">
+</div>

@@ -1,0 +1,662 @@
+<!--============== Header ================-->
+
+<script type="text/ng-template" id="Header.html">
+
+    <!-- title -->
+    <div class="nav navbar-nav">
+        <a class="btn no-shadow navbar-btn m-n wrapper-xs">{{::title}}</a>
+    </div>
+    <!-- / title -->
+
+    <!-- action button -->
+    <ul class="nav navbar-nav">
+        <li ng-repeat="(act, _cfg) in ::cfg.action" ng-if="!(_cfg.bind=='row')">
+            <a class="header-pd" ng-click="trigger(act,_cfg)">
+                <span class="btn btn-xs btn-default bg-light animate-btn">{{::_cfg.text}}</span>
+            </a>
+        </li>
+        <li ng-if="cfg.list">
+            <a class="header-pd" ng-click="load()">
+                <span class="btn btn-xs btn-danger">{{::'REFRESH' | i18n}}</span>
+            </a>
+        </li>
+    </ul>
+    <!-- / action button -->
+
+    <ul class="nav navbar-nav navbar-right">
+        <!-- mobile language drop -->
+        <li class="dropdown" uib-dropdown>
+            <a href class="dropdown-toggle header-pd" uib-dropdown-toggle ng-init="::lang=['中文','English'][lang]">
+                {{::lang}} <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu animated fadeInRight w h-dropdown-menu" uib-dropdown-menu>
+                <li ng-repeat="label in ::['中文','English']">
+                    <a ng-click="set_lang($index)" href>{{::label}}</a>
+                </li>
+            </ul>
+        </li>
+        <!-- / mobile language drop -->
+
+        <!-- user menu drop -->            
+        <li class="dropdown" uib-dropdown>
+            <a href class="dropdown-toggle clear header-pd" uib-dropdown-toggle>
+                <span>{{appUser.employee_name}}</span> <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu animated fadeInRight w h-dropdown-menu" uib-dropdown-menu>
+                <li>
+                    <a ng-click="app_download()">APP {{::'DOWNLOAD' | i18n}}</a>
+                </li>
+                <li>
+                    <a ng-click="app.theme=1">{{::'SET_THEME' | i18n}}</a>
+                </li>
+                <li>
+                    <a ng-click="close_all_msg()">{{::'CLOSE_MSG' | i18n}}</a>
+                </li>
+                <li>
+                    <a ng-click="trigger('启用弹窗')">{{::'ENABLE_POP_MSG' | i18n}}</a>
+                </li>
+                <li>
+                    <a ng-click="trigger('停用弹窗')">{{::'DISABLE_POP_MSG' | i18n}}</a>
+                </li>
+                <li>
+                    <a ng-click="trigger('修改密码')">{{::'CHANGE_PW' | i18n}}</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a ng-click="logout()">{{::'LOGOUT' | i18n}}</a>
+                </li>
+            </ul> 
+        </li>
+        <!-- / user menu drop -->
+    </ul>
+
+    <!-- text input -->
+    <form class="navbar-form navbar-form-sm navbar-right no-padder m-n wrapper-xs" >
+        <div class="input-group m-b-xxs">
+            <!-- text search drop -->
+            <span class="no-border no-bg dropdown" style="vertical-align: middle;" uib-dropdown
+                is-open="vm.s_text_drop" ng-mouseover="vm.s_text_drop=true" ng-mouseleave="vm.s_text_drop=false">
+                <a href class="dropdown-toggle input-sm" uib-dropdown-toggle>
+                    {{cfg.s_text[vm.s_text_sel].text}}<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu animated fadeInRight w h-dropdown-menu" uib-dropdown-menu>
+                    <li ng-repeat="(field,_cfg) in ::cfg.s_text" ng-init="vm.s_text_sel=vm.s_text_sel||field">
+                        <a ng-click="search[vm.s_text_sel] = '';vm.s_text_sel=field" href>{{::_cfg.text}}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a ng-click="vm.show_regular=true">{{'MORE' | i18n}}</a>
+                    </li>
+                </ul>
+            </span>
+            <!-- / text search drop -->
+            <!-- text search input -->
+            <div class="form-group" style="padding-top:4px;">
+                <div class="input-group">
+                  <input type="text"  class="form-control bg-light no-border rounded " style="height:24px;padding:0px 10px;border-radius: 0;"
+                         ng-model="search[vm.s_text_sel]">
+                  <span class="input-group-btn">
+                    <button class="btn btn-sm bg-light rounded" style="height:24px;padding:0px 8px;border-radius: 0;" ng-click="load(this)"><i class="fa fa-search"></i></button>
+                  </span>
+                </div>
+            </div>
+            <!-- / text search input -->
+        </div>
+    </form>
+    <!-- / text input -->
+
+</script>
+
+<!--============== Error ================-->
+
+<script type="text/ng-template" id="Error.html">
+    <div modal-movable class="modal-header bg-danger">
+        <p class="modal-title"><i class="fa fa-warning"></i>&nbsp;{{::title}}</p>
+    </div>
+    <div class="modal-body">
+        <p ng-bind-html="::msg"></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">{{::'OK' | i18n}}</button>
+    </div>
+</script>
+
+<!--============== Info ================-->
+
+<script type="text/ng-template" id="Info.html">
+    <div modal-movable class="modal-header bg-primary">
+        <p class="modal-title"><i class="fa fa-bullhorn"></i>&nbsp;{{::title}}</p>
+    </div>
+    <div class="modal-body">
+        <p ng-bind-html="::msg"></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">{{::'OK' | i18n}}</button>
+    </div>
+</script>
+
+<!--============== Confirm ================-->
+
+<script type="text/ng-template" id="Confirm.html">
+    <div modal-movable class="modal-header bg-primary">
+        <p class="modal-title"><i class="fa fa-bullhorn"></i>&nbsp;{{::title}}</p>
+    </div>
+    <div class="modal-body">
+        <p ng-bind-html="::msg"></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">{{::'OK' | i18n}}</button>
+        <button class="btn btn-default" ng-click="cancel()">{{::'CANCEL' | i18n}}</button>
+    </div>
+</script>
+
+<!--============== Mod ================-->
+
+<script type="text/ng-template" id="Mod.html">
+
+<div class="bg-white b-b mod_filter {{app.settings.asideFolded?'mod_flt_mg_fld':'mod_flt_mg'}}"  ng-show="vm.show_regular" >
+    <form class="form-inline">
+        <button class="btn bg-light rounded"  ng-click="vm.show_regular=false"><i class="fa fa-times"></i></button>
+        <button class="btn bg-light rounded"  ng-click="load()"><i class="fa fa-search"></i></button>
+        <div class="form-group" ng-repeat="(field,_cfg) in ::cfg.s_regular">
+            <input ng-if="!_cfg.auth_only && _cfg.type=='date'" type="text" placeholder="{{::_cfg.text}}" style="width:100px;" class="form-control" ng-model="search[field]" ui-pikaday />
+            <ui-select ng-if="!_cfg.auth_only &&_cfg.type && !{date:1,time:1}[_cfg.type]" 
+            append-to-body="true" ng-model="search[field]"  ng-change="searchChange(cfg.s_regular,field,search)"  >
+                <ui-select-match placeholder="{{::_cfg.text+'&nbsp;&nbsp;&nbsp;&nbsp;'}}">{{ $select.selected.value }}
+                    <a ng-click="$select.clear($event)">&nbsp;X&nbsp;</a>
+                </ui-select-match>
+                <ui-select-choices repeat="obj.key as (key,obj) in get_enum(_cfg,search,field) | filter: {value:$select.search}">
+                    <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+    </form>
+</div>
+
+
+<div class="wrapper-md" ng-class="{ 'mod_content':vm.show_regular }">
+    <div ui-grid="gridOptions" class="bg-white" ng-style="{height:dock_height(vm.show_regular)}"
+        ui-grid-selection
+        ui-grid-pagination
+        ui-grid-resize-columns
+        ui-grid-move-columns
+        ui-grid-auto-resize
+        ui-grid-pinning
+        ui-grid-save-state>
+    </div>
+</div>
+
+</script>
+
+<!--============== Blocks ================-->
+
+<script type="text/ng-template" id="Blocks.html">
+
+    <div modal-movable="cfg.modal" ng-if="::cfg.modal" class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <div class="panel panel-default" ng-repeat="block in cfg.block" ng-init="::_cfg=blocks[block]" ng-if="!block_hide[block]">
+        <div class="panel-heading font-bold" ng-init="show=true;icon='fa-minus'">
+                <a ng-click="show=!show;icon=show?'fa-minus':'fa-plus'" ng-class="{'active-blk':this[_cfg.active]}">
+                <i class="fa fa-plus" ng-class="icon"></i> {{::_cfg.text}}
+            </a>
+            <span ng-if="::!(cfg.ro[$index]==1)">
+                    <a class="bg-light animate-btn m-l-lg btn btn-xs btn-default" ng-repeat="(act, __cfg) in ::_cfg.action" 
+                    ng-if="::!(__cfg.bind=='row') && !cfg.btn_hide[act]" 
+                    ng-click="trigger(act,__cfg,block)" >{{::__cfg.text}}</a>
+            </span>
+        </div>
+        <div class="panel-body" ng-show="show">
+                <div ui-grid="gridCfg[block]" class="bg-white" ng-if="::_cfg.list"
+                        ng-style="{height:expand_height(gridCfg[block],_cfg.grouping)}" 
+                        
+                    ui-grid-grouping
+                    ui-grid-selection
+                    ui-grid-edit
+                    ui-grid-cellNav
+                    ui-grid-resize-columns
+                    ui-grid-auto-resize
+                    ui-grid-pinning
+                    ui-grid-move-columns
+                    ui-grid-save-state>
+                </div>
+<!--             </div> -->
+                <div ng-if = "::_cfg.view" ng-include="_cfg.view">
+                </div>
+        </div>
+    </div>
+    <div class="clearfix m-t-lg" ng-if="::cfg.modal&&cfg.action">
+        <button ng-repeat="(act, _cfg) in cfg.action" ng-if="!(_cfg.bind=='row')"
+                class="btn btn-sm btn-default bg-light pull-right" 
+                ng-click="trigger(act,_cfg)">
+                <span>{{::_cfg.text}}</span>
+        </button>
+    </div>
+</div>
+
+</script>
+
+
+<!--============== Form ================-->
+
+<script type="text/ng-template" id="Form.html">
+<div style="height:50px;" ng-if="cfg.modalless"></div>
+<form name="form" class="form-horizontal form-validation">
+      <div class="form-group" ng-repeat="(field,_cfg) in ::(cfg.list || blocks[cfg.block[0]].list)" ng-if ="_cfg.type!='seq'">
+            <label class="col-lg-3 control-label">{{::_cfg.text}}</label>
+            <div class="col-lg-6">
+                <div ng-class="::_cfg.btn?'input-group':''" >
+                    <!-- text -->
+                    <input ng-if="::!_cfg.type" type="text" class="form-control" ng-model="data[field]"
+                        ng-change="_cfg.change && this[_cfg.change](field)" ng-disabled="_cfg.ro" ui-validate="_cfg.validate"/>
+                    <!-- number -->
+                    <input ng-if="::_cfg.type=='number'" ng-init="::data[field]=+data[field]" type="number" 
+                    class="form-control" ng-model="data[field]" step ="{{_cfg.step || 1}}" 
+                    ng-change="_cfg.change && this[_cfg.change](field)" ng-disabled="_cfg.ro" ui-validate="_cfg.validate"/>
+                    <!-- time -->
+                    <input ng-if="::_cfg.type=='time'" type="text" class="form-control" ng-model="data[field]" 
+                            ng-change="_cfg.change && this[_cfg.change](field)" ng-disabled="_cfg.ro"
+                            model-view-value="true" ui-options="timeMaskOpt" 
+                            ui-mask="{{data[field][0] == '2' ? '23:59' : '29:59'}}"  
+                            ui-mask-placeholder ui-mask-placeholder-char="__:__" ui-validate="_cfg.validate"/>
+                    <!-- file -->
+                    <div ng-if="::_cfg.type=='file'" class="form-control no-border" >
+                        <input type="file" name="file" class="hidden" 
+                            ui-file="{{_cfg.upload}}" 
+                            path="{{_cfg.path || field}}" 
+                            thumbnail="{{_cfg.thumbnail}}" ng-disabled="_cfg.ro"/>
+                        <a class="small text-info" onclick="$(this).prev().click()"><em>{{::'UPLOAD' | i18n}}</em></a>
+                    </div>
+                    <!--filelist-->
+                    <div ng-if="::_cfg.type=='filelist'" class="form-control no-border" >
+                        <input type="file" name="file" class="hidden" 
+                            ui-file-list="{{_cfg.upload}}" 
+                            path="{{_cfg.path || field}}" 
+                            thumbnail="{{_cfg.thumbnail}}" ng-disabled="_cfg.ro"/>
+                        <a class="small text-info" ng-if ="!_cfg.ro" onclick="$(this).prev().click()"><em>{{::'UPLOAD' | i18n}}</em></a>
+                        <a class="small text-info" ng-if ="data[field]" ng-click="trigger('下载文件',null,null,data[field])"><em>{{::'DOWNLOAD' | i18n}}</em></a>
+                    </div>
+                    <!-- image -->
+                    <div ng-if="::_cfg.type=='img'" >
+                        <img  ng-src="{{appConst.HOST+'/'+data[field]}}" class="img-responsive" ng-if="data[field]"/>
+                    </div>
+                    <!-- date -->
+                    <input ng-if="::_cfg.type=='date'" type="text" ui-pikaday class="form-control" ng-model="data[field]" 
+                        ng-change="_cfg.change && this[_cfg.change](field)" ng-disabled="_cfg.ro" ui-validate="_cfg.validate"/>
+                    <!-- richtex -->
+                    <div ng-if="::_cfg.type=='richtext'" text-angular ng-model="data[field]" ></div>
+                    <!-- checkbox -->
+                    <div ng-if="::_cfg.type=='checkbox'">
+                        <label class="i-switch m-t-xs m-r">
+                            <input type="checkbox" ng-model="data[field]" ng-true-value="'1'" ng-false-value="'0'">
+                            <i></i>
+                        </label>
+                    </div>
+                    <!-- array select -->
+                    <ui-select ui-validate="_cfg.validate"
+                        ng-if="::_cfg.type=='ArrayEdit'"
+                        ng-model="data[field]"  ng-disabled="_cfg.ro" 
+                        ng-change="_cfg.change && this[_cfg.change](field)" >
+                        <ui-select-match>{{ $select.selected }}
+                            <a ng-click="$select.clear($event);data[field]='';" ng-if="_cfg.clear">&nbsp;X&nbsp;</a>
+                        </ui-select-match>
+                        <ui-select-choices repeat="v in get_enum(_cfg,data) | filter: $select.search">
+                            <div ng-bind-html="v | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <!-- pair select -->
+                    <ui-select ui-validate="_cfg.validate"
+                        ng-if="::_cfg.type && !{richtext:1,number:1,date:1,time:1,file:1,img:1,ArrayEdit:1,filelist:1,checkbox:1}[_cfg.type]"
+                        ng-model="data[field]"  ng-disabled="_cfg.ro" 
+                        ng-change="_cfg.change && this[_cfg.change](field)">
+                        <ui-select-match>{{ $select.selected.value }}
+                            <a ng-click="$select.clear($event);data[field]='';" ng-if="_cfg.clear">&nbsp;X&nbsp;</a>
+                        </ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum(_cfg,data) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <span class="input-group-btn" ng-if="::_cfg.btn">
+                        <button  class="btn btn-default" ng-click="trigger(_cfg.trigger,{text:_cfg.btn},null,data)">{{_cfg.btn}}</button>
+                    </span>
+                </div>
+            </div>
+      </div>
+      <div class="clearfix m-t-lg"  ng-if="!cfg.modalless">
+        <button type="submit" class="btn btn-sm btn-success pull-right"  ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+      </div>
+</form>
+</script>
+<!--============== form_window ================-->
+<script type="text/ng-template" id="form_window.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body" ng-include="'Form.html'">
+
+    </div>
+</script>
+
+<!--============== NumEdit ================-->
+
+<script type="text/ng-template" id="NumEdit.html">
+
+<input type="number" ng-init="MODEL_COL_FIELD=+MODEL_COL_FIELD"
+  ng-model="MODEL_COL_FIELD" ui-grid-editor />
+
+</script>
+
+<!--============== DateEdit ================-->
+
+<script type="text/ng-template" id="DateEdit.html">
+
+<input type="text" ng-model="MODEL_COL_FIELD" ui-pikaday />
+
+</script>
+
+<!--============== TimeEdit ================-->
+
+<script type="text/ng-template" id="TimeEdit.html">
+
+<input type="text" ui-grid-editor model-view-value="true" 
+    ng-blur="grid.appScope.cellEditClose(this)" 
+    ng-model="MODEL_COL_FIELD" 
+    ui-options="grid.appScope.timeMaskOpt" 
+    ui-mask="{{MODEL_COL_FIELD[0] == '2' ? '23:59' : '29:59'}}" 
+    ui-mask-placeholder ui-mask-placeholder-char="__:__" />
+
+</script>
+
+
+<!--============== PairEdit ================-->
+
+<script type="text/ng-template" id="PairEdit.html">
+
+<ui-select class="form-group-sm" ui-select-wrap append-to-body="true"
+    uis-open-close="grid.appScope.cellEditClose(this,isOpen)" 
+    ng-model="MODEL_COL_FIELD" >
+    <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+    <ui-select-choices repeat="obj.key as (key,obj) in ::grid.appScope.get_enum(col.colDef,row.entity) | filter: {value:$select.search}">
+        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+    </ui-select-choices>
+</ui-select>
+
+</script>
+
+
+<!--============== ArrayEdit ================-->
+
+<script type="text/ng-template" id="ArrayEdit.html">
+
+<ui-select class="form-group-sm" ui-select-wrap append-to-body="true"
+    uis-open-close="grid.appScope.cellEditClose(this,isOpen)" 
+    ng-model="MODEL_COL_FIELD" >
+    <ui-select-match>{{ $select.selected }}</ui-select-match>
+    <ui-select-choices repeat="item in ::grid.appScope.get_enum(col.colDef,row.entity) | filter: $select.search">
+        <div ng-bind-html="item | highlight: $select.search"></div>
+    </ui-select-choices>
+</ui-select>
+
+</script>
+
+
+
+
+
+
+
+
+<!--============== single_select ================-->
+
+<script type="text/ng-template" id="single_select.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div>
+                <ui-select ng-model="data.selected" required>
+                    <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:data.type,edit_path:data.edit_path}) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+
+    </div>
+</script>
+
+<!--============== multi_select ================-->
+
+<script type="text/ng-template" id="multi_select.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div>
+                <ui-select class="commonSelect" ng-model="data.selected" multiple required >
+                    <ui-select-match>{{ $item.value }}</ui-select-match>
+                    <ui-select-choices repeat="obj.key as (key,obj) in get_enum(data,row) | filter: {value:$select.search}">
+                        <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+
+    </div>
+</script>
+
+<!--============== double_select ================-->
+
+<script type="text/ng-template" id="double_select.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <div class="row m-b">
+                    <label class="col-md-2">{{data.old_selected_label}}</label>
+                    <ui-select class="col-md-5" ng-model="data.old_selected" ng-disabled="true" required>
+                        <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:data.type,edit_path:data.edit_path}) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="row">
+                    <label class="col-md-2">{{data.new_selected_label}}</label>
+                    <ui-select class="col-md-5" ng-model="data.selected" required>
+                        <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:data.type,edit_path:data.edit_path}) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+
+    </div>
+</script>
+
+<!--============== batch_settings ================-->
+
+<script type="text/ng-template" id="batch_settings.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <div class="row m-b px-30" ng-repeat = "(key,item) in setting_items">
+                    <label class="col-md-3">{{item.label}}</label>
+
+                    <input class="col-md-6" type="number" name="" ng-model="data[item['field']]"  
+                        ng-if="item.type==='number'" ng-disabled="item.ro">
+
+                    <input class="col-md-6" type="text" name="" ng-model="data[item['field']]"  
+                        ng-if="item.type==='text'" ng-disabled="item.ro">
+                        
+                    <ui-select required class="col-md-6 p-0" ng-model="data[item['field']]" 
+                        ng-if="item.type!=='text'&&item.type!=='number'" ng-disabled="item.ro">
+                        <ui-select-match>{{ $select.selected.value }}</ui-select-match>
+                        <ui-select-choices repeat="obj.key as (key,obj) in get_enum({type:item.type}) | filter: {value:$select.search}">
+                            <div ng-bind-html="obj.value | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>                                   
+            </div>
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+
+<!--============== input_single ================-->
+
+<script type="text/ng-template" id="input_single.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div>
+              <input type="text" class="form-control" ng-model="data.value"  ng-if="::type=='text'" required/>
+              <input type="number" class="form-control" ng-model="data.value"  ng-if="::type=='number'" 
+                    step="{{step || 1}}" ui-validate="validate" required/>
+              <select ng-model="data.value" class="form-control"
+                  ng-options="key as obj for (key,obj) in get_enum(type) " ng-if="::['text','number'].indexOf(type)===-1">
+              </select>
+            </div>
+
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+<!--============== time_range ================-->
+
+<script type="text/ng-template" id="time_range.html">
+    <div modal-movable class="tu-modal-head">
+        <h4 class="text-center tu-modal-title">{{::text}}</h4>
+        <button class="close closeBtn" aria-label="Close" ng-click="cancel()"></button>
+    </div>
+    <div class="tu-modal-body">
+        <form name="form" class="form-horizontal form-validation">
+            <div class="form-group">
+                <input type="text" ng-model="data.start_time" 
+                        model-view-value="true" ui-options="timeMaskOpt" 
+                        ui-mask="{{data.start_time[0] == '2' ? '23:59' : '29:59'}}"  
+                        ui-mask-placeholder ui-mask-placeholder-char="__:__" required /> -
+                <input type="text" ng-model="data.end_time" 
+                        model-view-value="true" ui-options="timeMaskOpt" 
+                        ui-mask="{{data.end_time[0] == '2' ? '23:59' : '29:59'}}"  
+                        ui-mask-placeholder ui-mask-placeholder-char="__:__" required />
+            </div>
+
+            <div class="clearfix m-t-lg">
+                <button type="submit" class="btn btn-sm btn-success pull-right" ng-disabled="form.$invalid" ng-click="submit()" ><strong>{{::'OK' | i18n}}</strong></button>
+            </div>
+        </form>
+    </div>
+</script>
+
+
+<!--============== ui-grid paging bar ================-->
+
+<script type="text/ng-template" id="Pagination.html">
+
+<div role="contentinfo" class="ui-grid-pager-panel" ng-class="{'ui-grid-pager-bar':grid.options.bbarInfo}" ui-grid-pager ng-show="grid.options.enablePaginationControls">
+    <div ng-bind-html="grid.options.bbarInfo" class="accountData" ng-if="grid.options.bbarInfo"></div>
+    <div class="clearfix">
+        <div role="navigation" class="ui-grid-pager-container">
+            <div role="menubar" class="ui-grid-pager-control">
+                <a type="button" role="menuitem" class="btn btn-default" ui-grid-one-bind-title="aria.pageToFirst" ui-grid-one-bind-aria-label="aria.pageToFirst" ng-click="pageFirstPageClick()" ng-disabled="cantPageBackward()">
+                    <div ng-class="grid.isRTL() ? 'last-triangle' : 'first-triangle'">
+                        <div ng-class="grid.isRTL() ? 'last-bar-rtl' : 'first-bar'">
+                        </div>
+                    </div>
+                </a>
+                <a type="button" role="menuitem" class="btn btn-default" ui-grid-one-bind-title="aria.pageBack" ui-grid-one-bind-aria-label="aria.pageBack" ng-click="pagePreviousPageClick()" ng-disabled="cantPageBackward()">
+                    <div ng-class="grid.isRTL() ? 'last-triangle prev-triangle' : 'first-triangle prev-triangle'"></div>
+                </a>
+                <input type="number" ui-grid-one-bind-title="aria.pageSelected" ui-grid-one-bind-aria-label="aria.pageSelected" class="ui-grid-pager-control-input" ng-model="grid.options.paginationCurrentPage" min="1" max="{{ paginationApi.getTotalPages() }}" required />
+                <span class="ui-grid-pager-max-pages-number" ng-show="paginationApi.getTotalPages() > 0">
+                    <!-- <abbr ui-grid-one-bind-title="paginationOf">
+                      /
+                    </abbr>
+                    {{ paginationApi.getTotalPages() }} -->
+                </span>
+                <a type="button" role="menuitem" class="btn btn-default" ui-grid-one-bind-title="aria.pageForward" ui-grid-one-bind-aria-label="aria.pageForward" ng-click="pageNextPageClick()" ng-disabled="cantPageForward()">
+                    <div ng-class="grid.isRTL() ? 'first-triangle next-triangle' : 'last-triangle next-triangle'"></div>
+                </a>
+                <a type="button" role="menuitem" class="btn btn-default" ui-grid-one-bind-title="aria.pageToLast" ui-grid-one-bind-aria-label="aria.pageToLast" ng-click="pageLastPageClick()" ng-disabled="cantPageToLast()">
+                    <div ng-class="grid.isRTL() ? 'first-triangle' : 'last-triangle'">
+                        <div ng-class="grid.isRTL() ? 'first-bar-rtl' : 'last-bar'">
+                        </div>
+                    </div>
+                </a>
+                &nbsp;
+                <a type="button" class="btn btn-default btn-xs" title="刷新" ng-click="grid.appScope.load()">
+                    <i class="fa fa-refresh"></i>
+                </a>
+            </div>
+            <div class="ui-grid-pager-row-count-picker" ng-if="grid.options.paginationPageSizes.length > 1 && !grid.options.useCustomPagination">
+                <select ui-grid-one-bind-aria-labelledby-grid="'items-per-page-label'" ng-model="grid.options.paginationPageSize" ng-options="o as o for o in grid.options.paginationPageSizes"></select>
+                <span ui-grid-one-bind-id-grid="'items-per-page-label'" class="ui-grid-pager-row-count-label">
+                    &nbsp;{{sizesLabel}}&nbsp;&nbsp;&nbsp;
+                    <span ng-show="grid.options.totalItems > 0">
+                        共{{grid.appScope.Math.ceil(grid.options.totalItems/grid.options.paginationPageSize)}}页
+                        </span>
+                </span>
+            </div>
+            <span ng-if="grid.options.paginationPageSizes.length <= 1" class="ui-grid-pager-row-count-label">
+                {{grid.options.paginationPageSize}}&nbsp;{{sizesLabel}}
+            </span>
+        </div>
+        <div class="ui-grid-pager-count-container">
+            <div class="ui-grid-pager-count">
+                <span ng-show="grid.options.totalItems > 0">
+                    {{ 1 + paginationApi.getFirstRowIndex() }}
+                    <abbr ui-grid-one-bind-title="paginationThrough">
+                      -
+                    </abbr>
+                    {{ 1 + paginationApi.getLastRowIndex() }} {{paginationOf}} {{grid.options.totalItems}} {{totalItemsLabel}}
+                </span>
+            </div>
+        </div>        
+    </div>
+
+</div>
+   
+
+
+</script>
+
+
